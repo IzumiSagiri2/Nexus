@@ -1,0 +1,394 @@
+[
+  {
+    "id": "prod-1772882338253xqgknuay22i",
+    "name": "Auto Order Telegram",
+    "type": "download",
+    "category": "Script Bot",
+    "thumbnail": "https://nexus.dongtube.my.id/cdn/0d5fd3d5e8cc2960.jpg",
+    "description": "",
+    "active": true,
+    "isNew": true,
+    "variants": [
+      {
+        "id": "v-1772882347039",
+        "name": "",
+        "description": "no update",
+        "price": 15000,
+        "contentType": "file",
+        "contentText": "",
+        "contentUrl": "https://drive.google.com/file/d/1tRO00TP2ZjyyO2Bv3G9zarwqNFkJdoC7/view?usp=drivesdk",
+        "stock": -1,
+        "filename": "Auto Order Telegram.zip",
+        "links": []
+      }
+    ]
+  },
+  {
+    "id": "prod-1772882248431xs21oeswdil",
+    "name": "Sewa Bot WhatsApp 1 Bulan",
+    "type": "sewabot",
+    "category": "Sewa Bot",
+    "thumbnail": "https://nexus.dongtube.my.id/cdn/787c820b24b81df8.jpg",
+    "description": "",
+    "active": true,
+    "isNew": true,
+    "variants": [
+      {
+        "id": "v-1772882251767",
+        "name": "Sewa Bot WhatsApp 1 Bulan",
+        "description": "",
+        "price": 15000,
+        "days": 30,
+        "stock": -1
+      }
+    ]
+  },
+  {
+    "id": "prod-17728821641918pc4k2oebdx",
+    "name": "Sewa Bot WhatsApp 14 Hari",
+    "type": "sewabot",
+    "category": "Sewa Bot",
+    "thumbnail": "https://nexus.dongtube.my.id/cdn/787c820b24b81df8.jpg",
+    "description": "",
+    "active": true,
+    "isNew": true,
+    "variants": [
+      {
+        "id": "v-1772882191374",
+        "name": "Sewa Bot WhatsApp 14 Hari",
+        "description": "",
+        "price": 10000,
+        "days": 14,
+        "stock": -1
+      }
+    ]
+  },
+  {
+    "id": "prod-17728821007024tj2lf35osc",
+    "name": "Sewa Bot WhatsApp 7 Hari",
+    "type": "sewabot",
+    "category": "Sewa Bot",
+    "thumbnail": "https://nexus.dongtube.my.id/cdn/787c820b24b81df8.jpg",
+    "description": "",
+    "active": true,
+    "isNew": true,
+    "variants": [
+      {
+        "id": "v-1772882111744",
+        "name": "Sewa Bot WhatsApp 5 Hari",
+        "description": "",
+        "price": 5000,
+        "days": 7,
+        "stock": -1
+      }
+    ]
+  },
+  {
+    "id": "prod-1772881490776nuwhn3kwvh9",
+    "name": "Panel Hosting UNLIMITED",
+    "type": "panel",
+    "category": "Panel Hosting",
+    "thumbnail": "https://nexus.dongtube.my.id/cdn/Panel.jpg",
+    "description": "",
+    "active": true,
+    "isNew": true,
+    "variants": [
+      {
+        "id": "var-1772881490776",
+        "name": "unlimited",
+        "price": 12000,
+        "description": "",
+        "stock": -1,
+        "plan": "unlimited",
+        "daysOptions": [
+          30
+        ],
+        "dayPrices": {
+          "7": 0,
+          "14": 0,
+          "30": 12000
+        }
+      }
+    ]
+  },
+  {
+    "id": "prod-17728814694965y2wi1pq9vn",
+    "name": "Panel Hosting 10GB",
+    "type": "panel",
+    "category": "Panel Hosting",
+    "thumbnail": "https://nexus.dongtube.my.id/cdn/Panel.jpg",
+    "description": "",
+    "active": true,
+    "isNew": true,
+    "variants": [
+      {
+        "id": "var-1772881469496",
+        "name": "10gb",
+        "price": 10000,
+        "description": "",
+        "stock": -1,
+        "plan": "10gb",
+        "daysOptions": [
+          30
+        ],
+        "dayPrices": {
+          "7": 0,
+          "14": 0,
+          "30": 10000
+        }
+      }
+    ]
+  },
+  {
+    "id": "prod-1772881443521jsi6wrftt3",
+    "name": "Panel Hosting 9GB",
+    "type": "panel",
+    "category": "Panel Hosting",
+    "thumbnail": "https://nexus.dongtube.my.id/cdn/Panel.jpg",
+    "description": "",
+    "active": true,
+    "isNew": true,
+    "variants": [
+      {
+        "id": "var-1772881443518",
+        "name": "9gb",
+        "price": 9000,
+        "description": "",
+        "stock": -1,
+        "plan": "9gb",
+        "daysOptions": [
+          30
+        ],
+        "dayPrices": {
+          "7": 0,
+          "14": 0,
+          "30": 9000
+        }
+      }
+    ]
+  },
+  {
+    "id": "prod-177288141910191d5s5vo439",
+    "name": "Panel Hosting 8GB",
+    "type": "panel",
+    "category": "Panel Hosting",
+    "thumbnail": "https://nexus.dongtube.my.id/cdn/Panel.jpg",
+    "description": "",
+    "active": true,
+    "isNew": true,
+    "variants": [
+      {
+        "id": "var-1772881419101",
+        "name": "8gb",
+        "price": 8000,
+        "description": "",
+        "stock": -1,
+        "plan": "8gb",
+        "daysOptions": [
+          30
+        ],
+        "dayPrices": {
+          "7": 0,
+          "14": 0,
+          "30": 8000
+        }
+      }
+    ]
+  },
+  {
+    "id": "prod-1772881394266ld3jx0p5uke",
+    "name": "Panel Hosting 7GB",
+    "type": "panel",
+    "category": "Panel Hosting",
+    "thumbnail": "https://nexus.dongtube.my.id/cdn/Panel.jpg",
+    "description": "",
+    "active": true,
+    "isNew": true,
+    "variants": [
+      {
+        "id": "var-1772881394266",
+        "name": "7gb",
+        "price": 7000,
+        "description": "",
+        "stock": -1,
+        "plan": "7gb",
+        "daysOptions": [
+          30
+        ],
+        "dayPrices": {
+          "7": 0,
+          "14": 0,
+          "30": 7000
+        }
+      }
+    ]
+  },
+  {
+    "id": "prod-17728813658465u4z75tl9l",
+    "name": "Panel Hosting 6GB",
+    "type": "panel",
+    "category": "Panel Hosting",
+    "thumbnail": "https://nexus.dongtube.my.id/cdn/Panel.jpg",
+    "description": "",
+    "active": true,
+    "isNew": true,
+    "variants": [
+      {
+        "id": "var-1772881365846",
+        "name": "6gb",
+        "price": 6000,
+        "description": "",
+        "stock": -1,
+        "plan": "6gb",
+        "daysOptions": [
+          30
+        ],
+        "dayPrices": {
+          "7": 0,
+          "14": 0,
+          "30": 6000
+        }
+      }
+    ]
+  },
+  {
+    "id": "prod-177288129687646ga524ljwy",
+    "name": "Panel Hosting 5GB",
+    "type": "panel",
+    "category": "Panel Hosting",
+    "thumbnail": "https://nexus.dongtube.my.id/cdn/Panel.jpg",
+    "description": "",
+    "active": true,
+    "isNew": true,
+    "variants": [
+      {
+        "id": "var-1772881296876",
+        "name": "5gb",
+        "price": 5000,
+        "description": "",
+        "stock": -1,
+        "plan": "5gb",
+        "daysOptions": [
+          30
+        ],
+        "dayPrices": {
+          "7": 0,
+          "14": 0,
+          "30": 5000
+        }
+      }
+    ]
+  },
+  {
+    "id": "prod-1772881276396hmzya0xahii",
+    "name": "Panel Hosting 4GB",
+    "type": "panel",
+    "category": "Panel Hosting",
+    "thumbnail": "https://nexus.dongtube.my.id/cdn/Panel.jpg",
+    "description": "",
+    "active": true,
+    "isNew": true,
+    "variants": [
+      {
+        "id": "var-1772881276396",
+        "name": "4gb",
+        "price": 4000,
+        "description": "",
+        "stock": -1,
+        "plan": "4gb",
+        "daysOptions": [
+          30
+        ],
+        "dayPrices": {
+          "7": 0,
+          "14": 0,
+          "30": 4000
+        }
+      }
+    ]
+  },
+  {
+    "id": "prod-177288125285280mdv6mpi26",
+    "name": "Panel Hosting 3GB",
+    "type": "panel",
+    "category": "Panel Hosting",
+    "thumbnail": "https://nexus.dongtube.my.id/cdn/Panel.jpg",
+    "description": "",
+    "active": true,
+    "isNew": true,
+    "variants": [
+      {
+        "id": "var-1772881252852",
+        "name": "3gb",
+        "price": 3000,
+        "description": "",
+        "stock": -1,
+        "plan": "3gb",
+        "daysOptions": [
+          30
+        ],
+        "dayPrices": {
+          "7": 0,
+          "14": 0,
+          "30": 3000
+        }
+      }
+    ]
+  },
+  {
+    "id": "prod-17728812275069rgw5vw5tj5",
+    "name": "Panel Hosting 2GB",
+    "type": "panel",
+    "category": "Panel Hosting",
+    "thumbnail": "https://nexus.dongtube.my.id/cdn/Panel.jpg",
+    "description": "",
+    "active": true,
+    "isNew": true,
+    "variants": [
+      {
+        "id": "var-1772881227506",
+        "name": "2gb",
+        "price": 2000,
+        "description": "",
+        "stock": -1,
+        "plan": "2gb",
+        "daysOptions": [
+          30
+        ],
+        "dayPrices": {
+          "7": 0,
+          "14": 0,
+          "30": 2000
+        }
+      }
+    ]
+  },
+  {
+    "id": "prod-1772881207013p4waszkf0dk",
+    "name": "Panel Hosting 1GB",
+    "type": "panel",
+    "category": "Panel Hosting",
+    "thumbnail": "https://nexus.dongtube.my.id/cdn/Panel.jpg",
+    "description": "",
+    "active": true,
+    "isNew": true,
+    "variants": [
+      {
+        "id": "var-1772881207011",
+        "name": "1gb",
+        "price": 1000,
+        "description": "",
+        "stock": -1,
+        "plan": "1gb",
+        "daysOptions": [
+          30
+        ],
+        "dayPrices": {
+          "7": 0,
+          "14": 0,
+          "30": 1000
+        }
+      }
+    ]
+  }
+]
