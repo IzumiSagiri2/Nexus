@@ -208,8 +208,8 @@
     }
   },
   {
-    "id": "unlimited",
-    "name": "UNLIMITED",
+    "id": "11gb",
+    "name": "11GB",
     "active": true,
     "ram": 0,
     "disk": 25000,
