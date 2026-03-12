@@ -439,17 +439,17 @@
       {
         "id": "var-1772881490776",
         "name": "unlimited",
-        "price": 12000,
+        "price": 11000,
         "description": "",
         "stock": -1,
-        "plan": "unlimited",
+        "plan": "11gb",
         "daysOptions": [
           30
         ],
         "dayPrices": {
           "7": 0,
           "14": 0,
-          "30": 12000
+          "30": 11000
         }
       }
     ]
