@@ -208,12 +208,12 @@
     }
   },
   {
-    "id": "11gb",
-    "name": "11GB",
+    "id": "unlimited",
+    "name": "UNLIMITED",
     "active": true,
-    "ram": 0,
+    "ram": 11000,
     "disk": 25000,
-    "cpu": 0,
+    "cpu": 700,
     "io": 500,
     "swap": 0,
     "egg": 15,
