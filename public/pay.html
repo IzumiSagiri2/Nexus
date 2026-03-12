@@ -370,9 +370,14 @@ function copyTrx() { if(TID) navigator.clipboard.writeText(TID).then(function(){
 function cp(id) { navigator.clipboard.writeText(document.getElementById(id).textContent).then(function(){notify('Disalin','ok');}); }
 function downloadQR() { if(!qrImgSrc) return; var a=document.createElement('a'); a.href=qrImgSrc; a.download='QRIS-'+TID+'.png'; a.click(); notify('QR diunduh','ok'); }
 
-// ── REAL-TIME: SSE with polling fallback
+// ── REAL-TIME: SSE + polling berjalan BERSAMAAN
+// SSE membaca status DB secara real-time, polling /api/check mengecek Pakasir dan memperbarui DB.
+// Keduanya harus berjalan bersamaan — SSE saja tidak cukup karena tidak memicu pengecekan ke Pakasir.
 function startRealtime() {
-  if (IS_SEWABOT) { startPolling(); return; }
+  // Selalu jalankan polling agar Pakasir selalu dicek dan DB diperbarui
+  startPolling();
+
+  if (IS_SEWABOT) { return; } // sewabot hanya butuh polling
   try {
     var src = new EventSource('/api/trx/' + TID + '/stream');
     sseConn = src;
@@ -380,14 +385,14 @@ function startRealtime() {
       var d = JSON.parse(e.data);
       if (d.type === 'connected') {
         document.getElementById('rtDot').style.display = '';
-        document.getElementById('footerTxt').textContent = 'Real-time aktif · Proses otomatis';
+        document.getElementById('footerTxt').textContent = 'Real-time aktif · Pengecekan otomatis tiap 5 detik';
       }
       if (d.type === 'status') {
         pollNum++;
         document.getElementById('pollCount').textContent = 'update ke-' + pollNum;
-        if (d.status === 'COMPLETED') { src.close(); handleResult({ status:'COMPLETED', result: d.result }); }
-        else if (d.status === 'FAILED') { src.close(); handleResult({ status:'FAILED' }); }
-        else if (d.status === 'EXPIRED') { src.close(); handleResult({ status:'EXPIRED' }); }
+        if (d.status === 'COMPLETED') { src.close(); sseConn = null; clearInterval(cInt); handleResult({ status:'COMPLETED', result: d.result }); }
+        else if (d.status === 'FAILED') { src.close(); sseConn = null; clearInterval(cInt); handleResult({ status:'FAILED' }); }
+        else if (d.status === 'EXPIRED') { src.close(); sseConn = null; clearInterval(cInt); handleResult({ status:'EXPIRED' }); }
       }
       if (d.type === 'ping') {
         pollNum++;
@@ -398,9 +403,9 @@ function startRealtime() {
       src.close(); sseConn = null;
       document.getElementById('rtDot').style.display = 'none';
       document.getElementById('footerTxt').textContent = 'Polling tiap 5 detik';
-      if (!done) startPolling();
+      // Polling sudah berjalan, tidak perlu startPolling() lagi
     };
-  } catch(e) { startPolling(); }
+  } catch(e) { /* polling sudah berjalan */ }
 }
 
 function startPolling() {

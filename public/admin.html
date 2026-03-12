@@ -2301,7 +2301,7 @@ function buildVariantCard(pi, vi) {
     // ── Content type fields
     var ctg = document.createElement('div'); ctg.className = 'f-row';
     var ctSel = document.createElement('select'); ctSel.className='f-inp';
-    var ctypes = [{v:'text',l:'Teks / Akun'},{v:'image',l:'Gambar'},{v:'video',l:'Video'},{v:'audio',l:'Audio / MP3'},{v:'link',l:'Link URL (redirect)'},{v:'file',l:'File Download (ZIP/APK/dll)'}];
+    var ctypes = [{v:'account',l:'📦 Multi-Akun (Stok Otomatis)'},{v:'text',l:'Teks / Akun'},{v:'image',l:'Gambar'},{v:'video',l:'Video'},{v:'audio',l:'Audio / MP3'},{v:'link',l:'Link URL (redirect)'},{v:'file',l:'File Download (ZIP/APK/dll)'}];
     ctypes.forEach(function(o){
       var opt = document.createElement('option'); opt.value=o.v; opt.textContent=o.l;
       if((v.contentType||'text')===o.v) opt.selected=true;
@@ -2334,6 +2334,148 @@ function buildVariantCard(pi, vi) {
 function updateContentFields(container, pi, vi, ct, v) {
   container.innerHTML = '';
   var g1 = document.createElement('div'); g1.className='f-row full';
+
+  if (ct === 'account') {
+    // ── Multi-Akun Pool UI
+    var acctBox = document.createElement('div');
+    acctBox.style.cssText = 'background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.15);border-radius:8px;padding:.75rem;margin-bottom:.5rem';
+
+    var acctHead = document.createElement('div');
+    acctHead.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem';
+    var acctTitle = document.createElement('span');
+    acctTitle.style.cssText = 'font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--em)';
+    acctTitle.textContent = '📦 Stok Akun';
+    var acctCountBadge = document.createElement('span');
+    acctCountBadge.style.cssText = 'font-size:.62rem;font-weight:700;background:rgba(52,211,153,.12);color:var(--em);border:1px solid rgba(52,211,153,.2);border-radius:20px;padding:.1rem .55rem';
+    acctCountBadge.textContent = 'Memuat...';
+    acctHead.appendChild(acctTitle); acctHead.appendChild(acctCountBadge);
+    acctBox.appendChild(acctHead);
+
+    // Current account list display
+    var acctListWrap = document.createElement('div');
+    acctListWrap.style.cssText = 'max-height:160px;overflow-y:auto;margin-bottom:.5rem;border-radius:6px';
+    acctBox.appendChild(acctListWrap);
+
+    var prod = productsData[pi];
+    var varId = prod && prod.variants && prod.variants[vi] && prod.variants[vi].id;
+    var prodId = prod && prod.id;
+
+    function renderAcctList(accounts) {
+      acctListWrap.innerHTML = '';
+      acctCountBadge.textContent = accounts.length + ' akun';
+      acctCountBadge.style.color = accounts.length === 0 ? 'var(--red)' : accounts.length <= 3 ? 'var(--yel)' : 'var(--em)';
+      if (accounts.length === 0) {
+        var empty = document.createElement('div');
+        empty.style.cssText = 'font-size:.62rem;color:var(--t3);padding:.35rem .5rem;text-align:center';
+        empty.textContent = 'Stok kosong';
+        acctListWrap.appendChild(empty);
+        return;
+      }
+      accounts.forEach(function(acct, idx) {
+        var row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:.4rem;padding:.28rem .5rem;border-radius:5px;transition:background .12s';
+        row.addEventListener('mouseenter', function(){ row.style.background='var(--bg3)'; });
+        row.addEventListener('mouseleave', function(){ row.style.background=''; });
+        var txt = document.createElement('span');
+        txt.style.cssText = 'font-size:.62rem;font-family:monospace;color:var(--t2);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
+        txt.title = acct;
+        txt.textContent = (idx + 1) + '. ' + acct;
+        var delBtn = document.createElement('button');
+        delBtn.style.cssText = 'font-size:.55rem;color:var(--red);background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.15);border-radius:4px;padding:.1rem .35rem;cursor:pointer;font-family:var(--font);flex-shrink:0';
+        delBtn.textContent = 'Hapus';
+        delBtn.onclick = async function() {
+          if (!confirm('Hapus akun #' + (idx+1) + '?')) return;
+          delBtn.disabled = true;
+          try {
+            const r = await fetch('/api/admin/accounts/' + prodId + '/' + varId + '/' + idx, { method: 'DELETE', headers: { 'x-admin-token': TOKEN } });
+            const d = await r.json();
+            if (d.ok) { await refreshAcctList(); toast('Akun dihapus.', 'ok'); }
+            else toast(d.message || 'Gagal hapus.', 'err');
+          } catch(e) { toast('Error: ' + e.message, 'err'); delBtn.disabled = false; }
+        };
+        row.appendChild(txt); row.appendChild(delBtn);
+        acctListWrap.appendChild(row);
+      });
+    }
+
+    async function refreshAcctList() {
+      if (!prodId || !varId) { acctCountBadge.textContent = 'Simpan produk dulu'; return; }
+      try {
+        const r = await fetch('/api/admin/accounts/' + prodId + '/' + varId, { headers: { 'x-admin-token': TOKEN } });
+        const d = await r.json();
+        if (d.ok) renderAcctList(d.accounts || []);
+        else acctCountBadge.textContent = 'Error';
+      } catch(e) { acctCountBadge.textContent = 'Error'; }
+    }
+    refreshAcctList();
+
+    // Add accounts textarea
+    var addArea = document.createElement('textarea');
+    addArea.className = 'f-inp'; addArea.rows = 4; addArea.style.resize = 'vertical';
+    addArea.style.fontFamily = 'monospace'; addArea.style.fontSize = '.68rem';
+    addArea.placeholder = 'Tambah akun baru (satu per baris):\nuser1|pass1\nuser2|pass2\nuser3|pass3';
+    acctBox.appendChild(addArea);
+
+    var btnRow = document.createElement('div');
+    btnRow.style.cssText = 'display:flex;gap:.4rem;margin-top:.4rem;flex-wrap:wrap';
+
+    var addBtn = document.createElement('button');
+    addBtn.style.cssText = 'font-size:.65rem;font-weight:700;color:#040d09;background:var(--em);border:none;border-radius:6px;padding:.35rem .75rem;cursor:pointer;font-family:var(--font)';
+    addBtn.textContent = '+ Tambah Akun';
+    addBtn.onclick = async function() {
+      if (!prodId || !varId) { toast('Simpan produk terlebih dahulu sebelum menambah akun.', 'warn'); return; }
+      const txt = addArea.value.trim();
+      if (!txt) { toast('Isi akun terlebih dahulu.', 'warn'); return; }
+      addBtn.disabled = true; addBtn.textContent = 'Menyimpan...';
+      try {
+        const r = await fetch('/api/admin/accounts/' + prodId + '/' + varId, {
+          method: 'POST', headers: { 'Content-Type': 'application/json', 'x-admin-token': TOKEN },
+          body: JSON.stringify({ accounts: txt }),
+        });
+        const d = await r.json();
+        if (d.ok) { addArea.value = ''; await refreshAcctList(); toast('✅ ' + d.added + ' akun ditambahkan. Total: ' + d.total, 'ok'); }
+        else toast(d.message || 'Gagal.', 'err');
+      } catch(e) { toast('Error: ' + e.message, 'err'); }
+      addBtn.disabled = false; addBtn.textContent = '+ Tambah Akun';
+    };
+
+    var clearBtn = document.createElement('button');
+    clearBtn.style.cssText = 'font-size:.6rem;font-weight:700;color:var(--red);background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);border-radius:6px;padding:.3rem .65rem;cursor:pointer;font-family:var(--font)';
+    clearBtn.textContent = 'Hapus Semua';
+    clearBtn.onclick = async function() {
+      if (!confirm('Hapus SEMUA akun dari stok varian ini? Aksi tidak bisa dibatalkan.')) return;
+      clearBtn.disabled = true;
+      try {
+        const r = await fetch('/api/admin/accounts/' + prodId + '/' + varId, { method: 'DELETE', headers: { 'x-admin-token': TOKEN } });
+        const d = await r.json();
+        if (d.ok) { await refreshAcctList(); toast('Semua akun dihapus.', 'ok'); }
+        else toast(d.message || 'Gagal.', 'err');
+      } catch(e) { toast('Error: ' + e.message, 'err'); }
+      clearBtn.disabled = false;
+    };
+
+    var refreshBtn = document.createElement('button');
+    refreshBtn.style.cssText = 'font-size:.6rem;color:var(--t3);background:none;border:1px solid var(--line);border-radius:6px;padding:.3rem .55rem;cursor:pointer;font-family:var(--font)';
+    refreshBtn.textContent = '↻ Refresh';
+    refreshBtn.onclick = function(){ refreshAcctList(); };
+
+    btnRow.appendChild(addBtn); btnRow.appendChild(clearBtn); btnRow.appendChild(refreshBtn);
+    acctBox.appendChild(btnRow);
+
+    var acctNote = document.createElement('div');
+    acctNote.style.cssText = 'font-size:.58rem;color:var(--t3);margin-top:.45rem;line-height:1.5;padding:.35rem .5rem;background:rgba(255,255,255,.03);border-radius:5px';
+    acctNote.innerHTML = '💡 <b>Format bebas</b> — satu akun per baris. Contoh: <code>user|pass</code> atau <code>email:pass</code> atau teks apapun.<br>Setiap pembeli mendapat 1 akun dari atas stok. Akun terkirim otomatis dihapus dari stok.<br>⚠️ <b>Stok = 0 (Habis)</b> tetap bisa dibeli kecuali kamu atur stok -1 (unlimited). Pastikan isi stok sebelum produk aktif.';
+    acctBox.appendChild(acctNote);
+
+    g1.appendChild(acctBox); container.appendChild(g1);
+
+    // ── Deskripsi varian
+    var g2 = document.createElement('div'); g2.className='f-row full';
+    var descw = mkField('Deskripsi (ditampilkan ke pembeli)', function(){ var i=document.createElement('input'); i.className='f-inp'; i.value=v.description||''; i.placeholder='Keterangan tambahan...'; i.addEventListener('input',function(){ productsData[pi].variants[vi].description=this.value; }); return i; }());
+    g2.appendChild(descw); container.appendChild(g2);
+    return; // skip rest of function for account type
+  }
+
   if (ct === 'text') {
     var tw = mkField('Konten Teks / Data Akun', function(){
       var ta=document.createElement('textarea'); ta.className='f-inp'; ta.rows=3; ta.style.resize='vertical';

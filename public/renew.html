@@ -251,7 +251,10 @@ async function renderStep2() {
     if (pj.ok) {
       var panelProd = pj.data.find(function(p){ return p.type === 'panel'; });
       if (panelProd) {
-        var matchVar = panelProd.variants.find(function(v){ return v.plan === d.plan; });
+        // Cari variant berdasarkan plan, lalu fallback ke variantId, lalu variant pertama
+        var matchVar = panelProd.variants.find(function(v){ return v.plan === d.plan; })
+          || (d.variantId && panelProd.variants.find(function(v){ return v.id === d.variantId; }))
+          || panelProd.variants[0];
         if (matchVar && matchVar.dayPrices) {
           dayPrices = matchVar.dayPrices;
         } else if (matchVar && matchVar.price) {
