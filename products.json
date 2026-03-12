@@ -34,6 +34,16 @@
           }
         ],
         "contentText": "covin@fbiagent.cyou"
+      },
+      {
+        "id": "v-1773286503888",
+        "name": "",
+        "description": "Am Prem 1 Thun",
+        "price": 1000,
+        "contentType": "text",
+        "contentText": "",
+        "contentUrl": "",
+        "stock": 1
       }
     ]
   },
