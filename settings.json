@@ -11,7 +11,7 @@
   "instagram": "",
   "otpEnabled": true,
   "panelEnabled": true,
-  "maintenanceMode": false,
+  "maintenanceMode": true,
   "maintenanceMsg": "Sedang dalam maintenance.",
   "musicUrl": "",
   "musicEnabled": false,
@@ -19,6 +19,7 @@
   "depositFeeType": "flat",
   "depositFee": 120,
   "depositMin": 5000,
+  "otpMarkup": 0,
   "bgUrl": "",
   "bgType": "image",
   "bgOpacity": 0.15
