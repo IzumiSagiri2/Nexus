@@ -617,8 +617,96 @@ footer a { color: var(--em); font-weight: 600; text-decoration: none }
 #pwaInstall .pi-btn{padding:.3rem .7rem;border:none;border-radius:7px;background:var(--em);color:#040d09;font-family:var(--font);font-size:.65rem;font-weight:800;cursor:pointer;flex-shrink:0}
 #pwaInstall .pi-close{position:absolute;top:.35rem;right:.45rem;font-size:.75rem;color:var(--t3);cursor:pointer;line-height:1;background:none;border:none;font-family:var(--font)}
 </style>
+
+<style>
+/* ── POPUP AD ── */
+#adOverlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.65);
+  z-index: 9990;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem;
+  backdrop-filter: blur(6px);
+  animation: adFadeIn .3s ease;
+}
+#adOverlay.hidden { display: none; }
+@keyframes adFadeIn { from { opacity:0 } to { opacity:1 } }
+.ad-wrap {
+  position: relative;
+  max-width: 340px; width: 100%;
+  transform: rotate(-3deg);
+  animation: adSlideIn .35s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes adSlideIn {
+  from { opacity:0; transform: rotate(-3deg) scale(.85) translateY(20px); }
+  to   { opacity:1; transform: rotate(-3deg) scale(1)   translateY(0); }
+}
+.ad-card {
+  background: #111;
+  border: 2px solid rgba(255,255,255,.15);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,.9), 0 0 0 1px rgba(255,255,255,.04);
+  cursor: pointer;
+  transition: transform .18s, box-shadow .18s;
+}
+.ad-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 32px 100px rgba(0,0,0,.95);
+}
+.ad-img {
+  width: 100%; display: block;
+  max-height: 300px; object-fit: cover;
+}
+.ad-text-box {
+  padding: .75rem 1rem;
+  font-size: .8rem; line-height: 1.55;
+  color: rgba(240,240,240,.88);
+  font-family: 'Instrument Sans', system-ui, sans-serif;
+  border-top: 1px solid rgba(255,255,255,.07);
+}
+.ad-close {
+  position: absolute;
+  top: -12px; right: -12px;
+  width: 30px; height: 30px;
+  background: #1a1a1a;
+  border: 2px solid rgba(255,255,255,.2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: rgba(240,240,240,.8);
+  font-size: .8rem; font-weight: 700;
+  transition: background .15s, transform .15s;
+  z-index: 1;
+  line-height: 1;
+  box-shadow: 0 4px 16px rgba(0,0,0,.7);
+}
+.ad-close:hover { background: #2a2a2a; transform: scale(1.12); color: #fff; }
+.ad-badge {
+  position: absolute;
+  bottom: -10px; left: 12px;
+  font-size: .52rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: rgba(240,240,240,.35);
+  background: #111;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 20px;
+  padding: .18rem .55rem;
+}
+</style>
 </head>
 <body>
+
+<!-- ── POPUP AD ── -->
+<div id="adOverlay" class="hidden" role="dialog" aria-modal="true" aria-label="Iklan">
+  <div class="ad-wrap">
+    <button class="ad-close" id="adClose" title="Tutup iklan" aria-label="Tutup iklan">✕</button>
+    <div class="ad-card" id="adCard">
+      <!-- content injected by JS -->
+    </div>
+    <div class="ad-badge">Iklan</div>
+  </div>
+</div>
 
 <div class="notif" id="notif">
   <div class="notif-icon" id="notifIcon"></div>
@@ -643,6 +731,7 @@ footer a { color: var(--em); font-weight: 600; text-decoration: none }
       <a href="/renew" class="n-btn hide-m">Perpanjang Panel</a>
 
       <a href="/track" class="n-btn hide-m">Track Order</a>
+      <a href="/cpanel" class="n-btn hide-m">cPanel</a>
       <a href="#" id="waBtn" target="_blank" class="n-btn em">Hubungi CS</a>
       <button class="hbg" id="hbgBtn" onclick="toggleDrawer()">
         <span class="bar bar1"></span>
@@ -679,6 +768,10 @@ footer a { color: var(--em); font-weight: 600; text-decoration: none }
   <a href="/track" class="dr-link" onclick="toggleDrawer()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     Track Order
+  </a>
+  <a href="/cpanel" class="dr-link" onclick="toggleDrawer()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    cPanel
   </a>
   <a href="/upload" class="dr-link" onclick="toggleDrawer()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
@@ -771,13 +864,15 @@ footer a { color: var(--em); font-weight: 600; text-decoration: none }
         <div class="pf-note">Buka grup WA → Info Grup → Salin link undangan.</div>
       </div>
 
-      <div class="ph-wrap">
-        <label class="ph-lbl">WhatsApp <span class="ph-opt">(opsional — untuk konfirmasi)</span></label>
+      <div class="ph-wrap" id="phoneWrap">
+        <label class="ph-lbl" id="phoneLbl">WhatsApp <span class="ph-opt" id="phoneOptLbl">(opsional — untuk konfirmasi)</span></label>
         <div class="ph-row">
           <span class="ph-pre">+62</span>
           <input type="number" class="ph-inp" id="phoneEl" placeholder="812xxxxxxxx">
         </div>
       </div>
+      <!-- Custom fields dinamic dari admin settings -->
+      <div id="customFieldsWrap" style="display:none"></div>
 
       <!-- Voucher -->
       <div id="voucherSection" style="display:none;margin-top:.35rem">
@@ -874,8 +969,64 @@ function applyGlobalSettings(s) {
   if (s.footerText) document.querySelectorAll('[data-footer-text], #ftFooter').forEach(function(el){ el.textContent = s.footerText; });
   if (s.wa) document.querySelectorAll('[data-wa-link]').forEach(function(el){ el.href = s.wa; });
   if (s.announcement) { var ab = document.getElementById('announcementBar'); if (ab) { ab.textContent = s.announcement; ab.style.display = ''; } }
+  if (s.announcement) { var ab = document.getElementById('announcementBar'); if (ab) { ab.textContent = s.announcement; ab.style.display = ''; } }
   applyGlobalBg(s);
 }
+
+// ── CUSTOM FIELDS: render field tambahan dari settings admin ke form order
+function applyOrderFormSettings(s) {
+  if (!s) return;
+  // Phone field
+  var phoneWrap = document.getElementById('phoneWrap');
+  var phoneEl   = document.getElementById('phoneEl');
+  var phoneOptLbl = document.getElementById('phoneOptLbl');
+  if (phoneWrap) {
+    var phoneEnabled  = s.phoneEnabled !== false;
+    var phoneRequired = s.phoneRequired === true;
+    phoneWrap.style.display = phoneEnabled ? '' : 'none';
+    if (phoneEl) {
+      if (phoneRequired) {
+        phoneEl.required = true;
+        if (phoneOptLbl) phoneOptLbl.textContent = '(wajib)';
+      } else {
+        phoneEl.required = false;
+        if (phoneOptLbl) phoneOptLbl.textContent = '(opsional — untuk konfirmasi)';
+      }
+    }
+  }
+  // Custom fields
+  var cfWrap = document.getElementById('customFieldsWrap');
+  if (!cfWrap) return;
+  var fields = Array.isArray(s.customFields) ? s.customFields : [];
+  if (!fields.length) { cfWrap.style.display = 'none'; cfWrap.innerHTML = ''; return; }
+  cfWrap.style.display = '';
+  cfWrap.innerHTML = fields.map(function(f) {
+    var isTextarea = f.type === 'textarea';
+    var inputEl = isTextarea
+      ? '<textarea id="cf_'+f.id+'" class="pf-input" style="min-height:60px;resize:vertical" placeholder="'+_esc(f.placeholder||'')+'"'+(f.required?' required':'')+'></textarea>'
+      : '<input type="'+(f.type||'text')+'" id="cf_'+f.id+'" class="pf-input" placeholder="'+_esc(f.placeholder||'')+ '"'+(f.required?' required':'')+' maxlength="500">';
+    return '<div class="ph-wrap" data-cf-id="'+f.id+'" data-cf-for="'+(f.forProduct||'all')+'">'
+      + '<label class="ph-lbl">'+_esc(f.label)+(f.required ? '' : ' <span class="ph-opt">(opsional)</span>')+'</label>'
+      + inputEl
+      + '</div>';
+  }).join('');
+  // Simpan ke window untuk akses di placeOrder
+  window._orderCustomFields = fields;
+}
+
+function _esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// Saat modal order dibuka — tampilkan hanya field yang sesuai product type
+function _filterCustomFields(productType) {
+  var fields = window._orderCustomFields || [];
+  fields.forEach(function(f) {
+    var el = document.querySelector('[data-cf-id="'+f.id+'"]');
+    if (!el) return;
+    var show = f.forProduct === 'all' || f.forProduct === productType;
+    el.style.display = show ? '' : 'none';
+  });
+}
+
 function applyGlobalBg(s) {
   var old = document.getElementById('_gbg'); if (old) old.remove();
   if (!s || !s.bgUrl) return;
@@ -1035,6 +1186,8 @@ async function load(silent) {
       applyMusicSettings(j.settings);
       applyGlobalSettings(j.settings);
       window._storeSettings = j.settings;
+      // ── Terapkan phone field dan custom fields dari settings admin
+      applyOrderFormSettings(j.settings);
       if (j.settings.faq && Array.isArray(j.settings.faq) && j.settings.faq.length) {
         renderFaq(j.settings.faq);
       }
@@ -1046,6 +1199,9 @@ async function load(silent) {
 
     // Load categories dari API lalu render tombol filter
     var catsEl = document.getElementById('catsEl');
+    // BUG FIX: Remove old dynamic category buttons before re-rendering to prevent duplicates
+    // on silent reload (visibilitychange, SSE reload, etc.)
+    Array.from(catsEl.querySelectorAll('.cat[data-c]:not([data-c="all"])')).forEach(function(b){ b.remove(); });
     try {
       var cjRes = await fetch('/api/categories');
       var cj = await cjRes.json();
@@ -1162,11 +1318,11 @@ function setCat(c, btn) {
 }
 
 // ── PANEL SPEC MAP — loaded from API, fallback to hardcoded
-var SPEC_MAP = { '1gb': ['1.5GB','3GB','100%'], '2gb': ['3.5GB','6GB','190%'], '3gb': ['4GB','7GB','250%'], '4gb': ['5GB','9GB','290%'], '5gb': ['6GB','13GB','330%'], '6gb': ['7GB','15GB','450%'], '7gb': ['8GB','17GB','500%'], '10gb': ['10GB','20GB','600%'], 'unlimited': ['Unlimited','25GB','Unlimited'] };
+var SPEC_MAP = { '1gb': ['1.5GB','3GB','100%'], '2gb': ['3.5GB','6GB','190%'], '3gb': ['4GB','7GB','250%'], '4gb': ['5GB','9GB','290%'], '5gb': ['6GB','13GB','330%'], '6gb': ['7GB','15GB','450%'], '7gb': ['8GB','17GB','500%'], '8gb': ['9GB','18GB','550%'], '9gb': ['9.5GB','19GB','575%'], '10gb': ['10GB','20GB','600%'], 'unlimited': ['Unlimited','25GB','Unlimited'] };
 
 function _fmtMb(mb) {
   if (mb === 0) return 'Unlimited';
-  return mb >= 1000 ? (mb/1000).toFixed(1).replace('.0','') + 'GB' : mb + 'MB';
+  return mb >= 1024 ? (mb/1024).toFixed(1).replace('.0','') + 'GB' : mb + 'MB';
 }
 function _fmtCpu(cpu) { return cpu === 0 ? 'Unlimited' : cpu + '%'; }
 
@@ -1187,6 +1343,8 @@ function openModal(pid) {
   if (!p) return;
   activeProd = p; selVarId = null;
   document.getElementById('mTitle').textContent = p.name;
+  // Filter custom fields sesuai product type
+  _filterCustomFields(p.productType || p.type || 'digital');
   document.getElementById('mSub').textContent = p.category;
   document.getElementById('totalEl').textContent = '—';
   document.getElementById('payBtn').disabled = true;
@@ -1347,11 +1505,38 @@ async function submitOrder() {
   btn.disabled = true; btn.textContent = '...';
   try {
     var phone = document.getElementById('phoneEl').value.trim();
+    // Validasi phone jika required
+    var _settings = window._storeSettings || {};
+    if (_settings.phoneRequired && _settings.phoneEnabled !== false && !phone) {
+      notify('Nomor WhatsApp wajib diisi.', 'err');
+      document.getElementById('phoneEl').focus();
+      return;
+    }
+    // Validasi custom fields required
+    var _cfields = window._orderCustomFields || [];
+    for (var _ci = 0; _ci < _cfields.length; _ci++) {
+      var _cf = _cfields[_ci];
+      var _cfShow = _cf.forProduct === 'all' || _cf.forProduct === (activeProd.productType || activeProd.type);
+      if (!_cfShow) continue;
+      if (_cf.required) {
+        var _cfel = document.getElementById('cf_' + _cf.id);
+        if (_cfel && !(_cfel.value || '').trim()) {
+          notify(_cf.label + ' wajib diisi.', 'err');
+          _cfel.focus();
+          return;
+        }
+      }
+    }
     var parts = [
       'productId=' + encodeURIComponent(activeProd.id),
       'variantId=' + encodeURIComponent(selVarId),
     ];
     if (phone) parts.push('phone=' + encodeURIComponent(phone));
+    // Sertakan custom field values — dikirim sebagai cf_<id>=<value>
+    _cfields.forEach(function(_cf2) {
+      var _el2 = document.getElementById('cf_' + _cf2.id);
+      if (_el2) parts.push('cf_' + encodeURIComponent(_cf2.id) + '=' + encodeURIComponent(_el2.value.trim()));
+    });
     if (isPan) {
       parts.push('panelUsername=' + encodeURIComponent(document.getElementById('pfUser').value.trim()));
       parts.push('panelPassword=' + encodeURIComponent(document.getElementById('pfPass').value.trim()));
@@ -1669,7 +1854,73 @@ function updateMusicBtn() {
   if (!_musicMuted) btn.classList.add('playing'); else btn.classList.remove('playing');
 }
 
+// ── POPUP AD SYSTEM ──────────────────────────────────────────────────────
+(function initAd() {
+  // Tampilkan iklan sekali per sesi (session storage agar tidak spam per visit)
+  var _adShown = sessionStorage.getItem('_adShown');
+  if (_adShown) return; // sudah tampil di sesi ini
 
+  function showAd(cfg) {
+    if (!cfg || !cfg.enabled) return;
+    // Harus ada gambar ATAU teks
+    if (!cfg.imageUrl && !cfg.text) return;
+
+    var overlay = document.getElementById('adOverlay');
+    var card    = document.getElementById('adCard');
+    var closeBtn= document.getElementById('adClose');
+    if (!overlay || !card) return;
+
+    // Build konten
+    var html = '';
+    if (cfg.imageUrl) {
+      html += '<img class="ad-img" src="' + cfg.imageUrl + '" alt="Iklan" loading="lazy" onerror="this.style.display=\'none\'">';
+    }
+    if (cfg.text) {
+      html += '<div class="ad-text-box">' + cfg.text.replace(/\n/g, '<br>') + '</div>';
+    }
+    card.innerHTML = html;
+
+    // Klik gambar/card → buka link (jika ada)
+    if (cfg.linkUrl) {
+      card.style.cursor = 'pointer';
+      card.onclick = function(e) {
+        // Hanya klik pada gambar/area card (bukan tombol X)
+        window.open(cfg.linkUrl, '_blank', 'noopener,noreferrer');
+      };
+    } else {
+      card.style.cursor = 'default';
+      card.onclick = null;
+    }
+
+    // Tampilkan dengan sedikit delay biar page load lebih dulu
+    setTimeout(function() {
+      overlay.classList.remove('hidden');
+      sessionStorage.setItem('_adShown', '1');
+    }, 1200);
+
+    // Tombol X - tutup iklan
+    closeBtn.onclick = function(e) {
+      e.stopPropagation();
+      overlay.classList.add('hidden');
+    };
+
+    // Klik di luar card (overlay) juga tutup
+    overlay.onclick = function(e) {
+      if (e.target === overlay) overlay.classList.add('hidden');
+    };
+
+    // Tekan Escape untuk tutup
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') overlay.classList.add('hidden');
+    }, { once: true });
+  }
+
+  // Fetch konfigurasi iklan dari server
+  fetch('/api/ad')
+    .then(function(r) { return r.json(); })
+    .then(function(j) { if (j.ok && j.enabled) showAd(j); })
+    .catch(function() {}); // Gagal fetch — iklan tidak tampil, bukan error
+})();
 
 </script>
 

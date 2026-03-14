@@ -403,7 +403,7 @@ fetch('/api/products').then(function(r){return r.json();}).then(function(j){ if(
         if (d.type === 'reconnect') { src.close(); setTimeout(connectSSE, 1000); }
       } catch(ex){}
     };
-    src.onerror = function() { src.close(); setTimeout(connectSSE, 30000); };
+    src.onerror = function() { src.close(); setTimeout(connectSSE, 5000); };
   } catch(ex){}
 })();
 

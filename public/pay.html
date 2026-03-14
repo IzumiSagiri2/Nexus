@@ -15,11 +15,11 @@
 :root{
   --bg:#080808;--bg1:#0e0e0e;--bg2:#141414;--bg3:#1a1a1a;
   --line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--line3:rgba(255,255,255,.2);
-  --em:#34d399;--em2:#6ee7b7;--red:#f87171;--yellow:#fbbf24;--sky:#38bdf8;
+  --em:#34d399;--em-rgb:52,211,153;--em2:#6ee7b7;--red:#f87171;--yellow:#fbbf24;--sky:#38bdf8;
   --t1:#f5f5f5;--t2:rgba(245,245,245,.55);--t3:rgba(245,245,245,.28);--t4:rgba(245,245,245,.12);
   --font:'Instrument Sans',sans-serif;--rad:14px;--rs:9px;
 }
-html,body{height:100%  overscroll-behavior: none;
+html,body{height:100%; overscroll-behavior: none;
 }
 body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:1.5rem 1rem 3rem;font-size:13.5px}
 body::before{content:'';position:fixed;top:-150px;left:50%;transform:translateX(-50%);width:600px;height:300px;pointer-events:none;z-index:0;background:radial-gradient(ellipse,rgba(var(--em-rgb),.05) 0%,transparent 70%)}
@@ -391,6 +391,7 @@ function startRealtime() {
         pollNum++;
         document.getElementById('pollCount').textContent = 'update ke-' + pollNum;
         if (d.status === 'COMPLETED') { src.close(); sseConn = null; clearInterval(cInt); handleResult({ status:'COMPLETED', result: d.result }); }
+        else if (d.status === 'PAID_ERROR') { src.close(); sseConn = null; clearInterval(cInt); handleResult({ status:'COMPLETED', result: d.result || { type:'error', message:'Pembayaran diterima tapi proses gagal. Hubungi admin. ID: ' + TID } }); }
         else if (d.status === 'FAILED') { src.close(); sseConn = null; clearInterval(cInt); handleResult({ status:'FAILED' }); }
         else if (d.status === 'EXPIRED') { src.close(); sseConn = null; clearInterval(cInt); handleResult({ status:'EXPIRED' }); }
       }
@@ -451,66 +452,6 @@ async function init() {
     if (d.voucherDiscount > 0) { document.getElementById('dVcRow').style.display=''; document.getElementById('dVcDisc').textContent='-'+idr(d.voucherDiscount); }
     if (d.adminFee > 0) { document.getElementById('dFeeRow').style.display=''; document.getElementById('dFee').textContent=idr(d.adminFee); }
     if (d.phone) { document.getElementById('dWaRow').style.display=''; document.getElementById('dWa').textContent=d.phone; }
-    
-// ── GLOBAL SETTINGS APPLICATOR
-
-function _hexToRgb(hex) {
-  hex = hex.replace('#','');
-  if (hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-  var r = parseInt(hex.substring(0,2),16);
-  var g = parseInt(hex.substring(2,4),16);
-  var b = parseInt(hex.substring(4,6),16);
-  return r+','+g+','+b;
-}
-function applyGlobalSettings(s) {
-  if (!s) return;
-  if (s.primaryColor) {
-    document.documentElement.style.setProperty('--em', s.primaryColor);
-    document.documentElement.style.setProperty('--em2', s.primaryColor);
-    document.documentElement.setAttribute('data-em', s.primaryColor);
-    // Set --em-rgb for use in rgba(var(--em-rgb), opacity)
-    var _rgb = _hexToRgb(s.primaryColor);
-    document.documentElement.style.setProperty('--em-rgb', _rgb);
-  }
-  if (s.storeName) {
-    document.querySelectorAll('[data-store-name], #storeName, #ftName, .js-store-name').forEach(function(el){ el.textContent = s.storeName; });
-    if (!document.title.toLowerCase().includes('admin')) document.title = s.storeName;
-  }
-  if (s.logoUrl) {
-    document.querySelectorAll('[data-logo-img]').forEach(function(el){ el.src = s.logoUrl; el.style.display = ''; });
-    document.querySelectorAll('[data-logo-placeholder]').forEach(function(el){ el.style.display = 'none'; });
-  }
-  if (s.footerText) document.querySelectorAll('[data-footer-text]').forEach(function(el){ el.textContent = s.footerText; });
-  if (s.wa) document.querySelectorAll('[data-wa-link]').forEach(function(el){ el.href = s.wa; });
-  if (s.announcement) { var ab = document.getElementById('announcementBar'); if (ab) { ab.textContent = s.announcement; ab.style.display = ''; } }
-  applyGlobalBg(s);
-}
-function applyGlobalBg(s) {
-  var old = document.getElementById('_gbg'); if (old) old.remove();
-  if (!s || !s.bgUrl) return;
-  var op = s.bgOpacity != null ? parseFloat(s.bgOpacity) : 0.15;
-  var el = document.createElement('div');
-  el.id = '_gbg';
-  el.setAttribute('aria-hidden','true');
-  el.style.cssText = 'position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;will-change:transform;transform:translateZ(0)';
-  if (s.bgType === 'video') {
-    var v = document.createElement('video');
-    v.src = s.bgUrl; v.autoplay = true; v.loop = true; v.muted = true; v.playsInline = true;
-    v.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:'+op+';transform:translateZ(0)';
-    el.appendChild(v);
-  } else {
-    var img = document.createElement('div');
-    img.style.cssText = 'position:absolute;inset:0;background-image:url('+JSON.stringify(s.bgUrl)+');background-size:cover;background-position:center;opacity:'+op+';transform:translateZ(0)';
-    el.appendChild(img);
-  }
-  document.body.insertBefore(el, document.body.firstChild);
-}
-
-// Load global settings on pay page
-fetch('/api/products').then(function(r){return r.json();}).then(function(j){
-  if(j.wa) { var w=document.getElementById('waRes'); if(w) w.href=j.wa; }
-  if(j.settings) applyGlobalSettings(j.settings);
-}).catch(function(){});
 
     // FREE PRODUCT
     if (d.freeProduct) {
@@ -552,6 +493,65 @@ fetch('/api/products').then(function(r){return r.json();}).then(function(j){
 
   } catch(e) { showErr('Gagal: ' + e.message); }
 }
+
+// ── GLOBAL SETTINGS APPLICATOR
+
+function _hexToRgb(hex) {
+  hex = hex.replace('#','');
+  if (hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+  var r = parseInt(hex.substring(0,2),16);
+  var g = parseInt(hex.substring(2,4),16);
+  var b = parseInt(hex.substring(4,6),16);
+  return r+','+g+','+b;
+}
+function applyGlobalSettings(s) {
+  if (!s) return;
+  if (s.primaryColor) {
+    document.documentElement.style.setProperty('--em', s.primaryColor);
+    document.documentElement.style.setProperty('--em2', s.primaryColor);
+    document.documentElement.setAttribute('data-em', s.primaryColor);
+    var _rgb = _hexToRgb(s.primaryColor);
+    document.documentElement.style.setProperty('--em-rgb', _rgb);
+  }
+  if (s.storeName) {
+    document.querySelectorAll('[data-store-name], #storeName, #ftName, .js-store-name').forEach(function(el){ el.textContent = s.storeName; });
+    if (!document.title.toLowerCase().includes('admin')) document.title = s.storeName;
+  }
+  if (s.logoUrl) {
+    document.querySelectorAll('[data-logo-img]').forEach(function(el){ el.src = s.logoUrl; el.style.display = ''; });
+    document.querySelectorAll('[data-logo-placeholder]').forEach(function(el){ el.style.display = 'none'; });
+  }
+  if (s.footerText) document.querySelectorAll('[data-footer-text]').forEach(function(el){ el.textContent = s.footerText; });
+  if (s.wa) document.querySelectorAll('[data-wa-link]').forEach(function(el){ el.href = s.wa; });
+  if (s.announcement) { var ab = document.getElementById('announcementBar'); if (ab) { ab.textContent = s.announcement; ab.style.display = ''; } }
+  applyGlobalBg(s);
+}
+function applyGlobalBg(s) {
+  var old = document.getElementById('_gbg'); if (old) old.remove();
+  if (!s || !s.bgUrl) return;
+  var op = s.bgOpacity != null ? parseFloat(s.bgOpacity) : 0.15;
+  var el = document.createElement('div');
+  el.id = '_gbg';
+  el.setAttribute('aria-hidden','true');
+  el.style.cssText = 'position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;will-change:transform;transform:translateZ(0)';
+  if (s.bgType === 'video') {
+    var v = document.createElement('video');
+    v.src = s.bgUrl; v.autoplay = true; v.loop = true; v.muted = true; v.playsInline = true;
+    v.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:'+op+';transform:translateZ(0)';
+    el.appendChild(v);
+  } else {
+    var img = document.createElement('div');
+    img.style.cssText = 'position:absolute;inset:0;background-image:url('+JSON.stringify(s.bgUrl)+');background-size:cover;background-position:center;opacity:'+op+';transform:translateZ(0)';
+    el.appendChild(img);
+  }
+  document.body.insertBefore(el, document.body.firstChild);
+}
+
+// Load global settings on pay page — runs at page load regardless of TID
+fetch('/api/products').then(function(r){return r.json();}).then(function(j){
+  if(j.wa) { var w=document.getElementById('waRes'); if(w) w.href=j.wa; }
+  if(j.settings) applyGlobalSettings(j.settings);
+}).catch(function(){});
 
 // ── TIMER
 function startTimer() {
@@ -693,7 +693,7 @@ function renderContent(res) {
   if (res.instructions && res.instructions.trim()) {
     var instLines = res.instructions.trim().split('\n');
     var instHtml = '<div style="margin-bottom:1rem">'
-      + '<div style="font-size:.67rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin-bottom:.5rem">📋 Langkah-langkah</div>'
+      + '<div style="font-size:.67rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin-bottom:.5rem">Langkah-langkah</div>'
       + '<ol style="margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:.3rem">'
       + instLines.map(function(ln){
           var clean = ln.replace(/^\d+\.\s*/, '').trim();
@@ -773,7 +773,7 @@ function handleResult(j) {
       c2.innerHTML = [res.ram?'<span class="chip">'+res.ram+' RAM</span>':'', res.addedDays?'<span class="chip">+'+res.addedDays+' Hari</span>':''].join('');
       buildReceipt(res);
     } else if (res.type === 'sewabot') {
-      document.getElementById('resTtl').textContent = '🤖 Pesanan Bot Diterima!';
+      document.getElementById('resTtl').textContent = 'Pesanan Bot Diterima';
       document.getElementById('resDesc').textContent = 'Pembayaran berhasil. Owner akan segera memasang bot di grup WhatsApp kamu.';
       // Build sewabot info card
       var sbInfoHtml = '<div style="background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:.85rem 1rem;margin-top:.6rem;display:flex;flex-direction:column;gap:.55rem">'
@@ -783,7 +783,7 @@ function handleResult(j) {
         + (res.groupUrl ? '<button onclick="navigator.clipboard.writeText(\''+res.groupUrl+'\').then(function(){toast(\'Link disalin!\',\'ok\')})" style="font-size:.58rem;padding:.2rem .5rem;border-radius:5px;border:1px solid var(--line);background:none;color:var(--em);cursor:pointer;font-family:var(--font);white-space:nowrap">Salin</button>' : '')
         + '</div>'
         + '<div style="display:flex;gap:.5rem;flex-wrap:wrap">'
-        + '<span style="background:rgba(var(--em-rgb),.1);color:var(--em);border-radius:6px;padding:.2rem .6rem;font-size:.62rem;font-weight:700">⏱ ' + (res.days || '?') + ' Hari</span>'
+        + '<span style="background:rgba(var(--em-rgb),.1);color:var(--em);border-radius:6px;padding:.2rem .6rem;font-size:.62rem;font-weight:700">' + (res.days || '?') + ' Hari</span>'
         + '<span style="background:var(--bg3);color:var(--t2);border-radius:6px;padding:.2rem .6rem;font-size:.62rem">ID: ' + TID + '</span>'
         + '</div>'
         + '<div style="font-size:.6rem;color:var(--t3);line-height:1.6">Jika dalam 1x24 jam bot belum dipasang, hubungi admin dengan menyebut ID pesanan di atas.</div>'
@@ -873,6 +873,7 @@ init();
     _src.onmessage = function(e) {
       try {
         var d = JSON.parse(e.data);
+        if (d.type === 'reconnect') { _src.close(); setTimeout(connectStoreSSE, 1500); return; }
         if (d.type === 'settings_update' && d.settings) {
           applyGlobalSettings(d.settings);
         }
@@ -887,7 +888,7 @@ init();
         }
       } catch(ex){}
     };
-    _src.onerror = function(){ _src.close(); setTimeout(connectStoreSSE, 30000); };
+    _src.onerror = function(){ _src.close(); setTimeout(connectStoreSSE, 5000); };
   } catch(ex){}
 })();
 </script>

@@ -111,6 +111,22 @@ body{overflow:hidden}
 .tb-btn:hover{border-color:var(--line3);background:var(--bg2)}
 .tb-btn.em-btn{border-color:rgba(var(--em-rgb),.35);background:rgba(var(--em-rgb),.1);color:var(--em);font-weight:700}
 .tb-btn.em-btn:hover{background:rgba(var(--em-rgb),.18)}
+/* Reseller action buttons — dropdown di mobile, inline di desktop */
+.rs-actions{position:relative;display:inline-block}
+.rs-actions-btn{padding:.28rem .6rem;border-radius:6px;border:1px solid var(--line2);background:var(--bg3);color:var(--t1);font-family:var(--font);font-size:.62rem;font-weight:600;cursor:pointer;white-space:nowrap;min-height:26px;display:flex;align-items:center;gap:.3rem}
+.rs-actions-btn:hover{border-color:var(--line3);background:var(--bg2)}
+.rs-actions-btn svg{flex-shrink:0}
+.rs-dropdown{display:none;position:absolute;right:0;top:calc(100% + 4px);background:var(--bg1);border:1px solid var(--line2);border-radius:10px;box-shadow:0 16px 48px rgba(0,0,0,.85);z-index:999;min-width:150px;overflow:hidden}
+.rs-dropdown.open{display:block}
+.rs-drop-item{display:block;width:100%;padding:.55rem .85rem;background:none;border:none;color:var(--t1);font-family:var(--font);font-size:.7rem;font-weight:500;cursor:pointer;text-align:left;transition:background .12s;white-space:nowrap}
+.rs-drop-item:hover{background:var(--bg3)}
+.rs-drop-item.warn{color:var(--yel)}
+.rs-drop-item.danger{color:var(--red)}
+.rs-drop-item.success{color:var(--em)}
+.rs-drop-sep{height:1px;background:var(--line);margin:.2rem 0}
+/* Collapsible section chevron */
+.sec-head .sec-chev{transition:transform .2s;flex-shrink:0}
+.sec-head.open .sec-chev{transform:rotate(180deg)}
 
 /* ─── TABLE ─── */
 .tbl-wrap{background:var(--bg1);border:1px solid var(--line);border-radius:var(--rad);overflow:hidden}
@@ -243,47 +259,114 @@ body{overflow:hidden}
 .toggle-sl::before{content:'';position:absolute;left:2px;top:2px;width:12px;height:12px;border-radius:50%;background:var(--t3);transition:.2s}
 .toggle-wrap input:checked + .toggle-sl{background:rgba(var(--em-rgb),.15);border-color:rgba(var(--em-rgb),.4)}
 .toggle-wrap input:checked + .toggle-sl::before{transform:translateX(16px);background:var(--em)}
-/* ─── ADD PRODUCT MODAL ─── */
-.apmd-bg{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:10000;display:none;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .2s}
+/* ─── ADD PRODUCT MODAL (v3) ─── */
+.apmd-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:10000;display:none;align-items:center;justify-content:center;padding:.75rem;opacity:0;pointer-events:none;transition:opacity .22s;backdrop-filter:blur(6px)}
 .apmd-bg.on{display:flex;opacity:1;pointer-events:all}
-.apmd{background:var(--bg1);border:1px solid var(--line2);border-radius:20px;width:100%;max-width:640px;max-height:92vh;overflow-y:auto;box-shadow:0 0 100px rgba(0,0,0,.95);transform:scale(.93) translateY(16px);transition:transform .22s}
+.apmd{background:var(--bg1);border:1px solid var(--line2);border-radius:18px;width:100%;max-width:760px;max-height:94vh;display:flex;flex-direction:column;box-shadow:0 32px 120px rgba(0,0,0,.98);transform:scale(.95) translateY(18px);transition:transform .25s cubic-bezier(.22,1,.36,1)}
 .apmd-bg.on .apmd{transform:scale(1) translateY(0)}
-.apmd-head{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg1);z-index:2}
-.apmd-title{font-size:.88rem;font-weight:700;display:flex;align-items:center;gap:.5rem}
-.apmd-step{font-size:.58rem;padding:.15rem .5rem;border-radius:20px;background:rgba(var(--em-rgb),.12);color:var(--em);font-weight:700}
-.apmd-close{background:none;border:none;color:var(--t3);cursor:pointer;font-size:1rem;padding:.2rem .35rem;border-radius:5px;transition:color .15s}
-.apmd-close:hover{color:var(--t1)}
-.apmd-body{padding:1.1rem 1.25rem}
-/* Type cards */
-.type-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:.5rem;margin-bottom:1rem}
-.type-card{background:var(--bg2);border:2px solid var(--line);border-radius:12px;padding:.75rem .85rem;cursor:pointer;transition:all .15s;user-select:none}
-.type-card:hover{border-color:var(--line2);background:var(--bg3)}
-.type-card.selected{border-color:rgba(var(--em-rgb),.55);background:rgba(var(--em-rgb),.07)}
-.type-card-icon{font-size:1.3rem;margin-bottom:.35rem}
-.type-card-name{font-size:.72rem;font-weight:700;margin-bottom:.2rem}
-.type-card-desc{font-size:.6rem;color:var(--t3);line-height:1.45}
-/* Section label */
-.apmd-sec{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin:.9rem 0 .45rem;display:flex;align-items:center;gap:.4rem}
+
+/* Header */
+.apmd-head{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.1rem;border-bottom:1px solid var(--line);flex-shrink:0}
+.apmd-title{font-size:.82rem;font-weight:700;color:var(--t1);display:flex;align-items:center;gap:.5rem}
+.apmd-title-sub{font-size:.63rem;color:var(--t3);font-weight:400;margin-left:.15rem}
+.apmd-close{background:none;border:none;color:var(--t3);cursor:pointer;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:color .14s,background .14s;flex-shrink:0}
+.apmd-close:hover{color:var(--t1);background:var(--bg3)}
+
+/* Two-column layout */
+.apmd-layout{display:flex;flex:1;min-height:0;overflow:hidden}
+
+/* Left: type sidebar */
+.apmd-types{width:176px;flex-shrink:0;border-right:1px solid var(--line);overflow-y:auto;padding:.6rem .5rem;display:flex;flex-direction:column;gap:.2rem}
+.apmd-types-label{font-size:.53rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--t4);padding:.3rem .5rem .5rem}
+.ptype{display:flex;align-items:center;gap:.55rem;padding:.55rem .65rem;border-radius:8px;cursor:pointer;border:1px solid transparent;transition:all .13s;user-select:none}
+.ptype:hover{background:var(--bg3);border-color:var(--line)}
+.ptype.sel{background:rgba(var(--em-rgb),.08);border-color:rgba(var(--em-rgb),.28)}
+.ptype-ico{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--bg3);border:1px solid var(--line);transition:all .13s}
+.ptype.sel .ptype-ico{background:rgba(var(--em-rgb),.12);border-color:rgba(var(--em-rgb),.28)}
+.ptype-ico svg{width:14px;height:14px;stroke:var(--t3);transition:stroke .13s}
+.ptype.sel .ptype-ico svg{stroke:var(--em)}
+.ptype-info{min-width:0}
+.ptype-name{font-size:.67rem;font-weight:700;color:var(--t2);line-height:1.1;transition:color .13s}
+.ptype.sel .ptype-name{color:var(--em)}
+.ptype-sub{font-size:.55rem;color:var(--t4);line-height:1.2;margin-top:.1rem}
+
+/* Right: form area */
+.apmd-form{flex:1;overflow-y:auto;padding:.9rem 1.1rem;min-width:0}
+
+/* Section divider */
+.apmd-sec{font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--t4);margin:1rem 0 .55rem;display:flex;align-items:center;gap:.45rem}
 .apmd-sec::after{content:'';flex:1;height:1px;background:var(--line)}
-/* Hint box */
-.apmd-hint{background:rgba(var(--em-rgb),.05);border:1px solid rgba(var(--em-rgb),.15);border-radius:8px;padding:.55rem .75rem;font-size:.63rem;color:var(--t2);line-height:1.6;margin-bottom:.75rem}
-.apmd-hint b{color:var(--em)}
-/* Variant quick-start */
-.var-qs{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:.75rem .85rem;margin-top:.7rem}
-.var-qs-title{font-size:.65rem;font-weight:700;margin-bottom:.5rem;display:flex;align-items:center;gap:.35rem}
+.apmd-sec:first-child{margin-top:0}
+
+/* Info banner */
+.apmd-info{background:rgba(255,255,255,.03);border:1px solid var(--line);border-left:2px solid rgba(var(--em-rgb),.45);border-radius:0 7px 7px 0;padding:.5rem .7rem;font-size:.61rem;color:var(--t2);line-height:1.55;margin-bottom:.75rem}
+.apmd-info b{color:var(--t1)}
+.apmd-info.sky{border-left-color:rgba(56,189,248,.5)}
+.apmd-info.yel{border-left-color:rgba(251,191,36,.5)}
+.apmd-info.pur{border-left-color:rgba(167,139,250,.5)}
+
+/* Chips row (click-to-fill) */
+.chip-row{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.35rem}
+.chip{padding:.22rem .6rem;border-radius:20px;background:var(--bg3);border:1px solid var(--line);font-size:.6rem;color:var(--t3);cursor:pointer;transition:all .13s;user-select:none;white-space:nowrap}
+.chip:hover{border-color:rgba(var(--em-rgb),.3);color:var(--em);background:rgba(var(--em-rgb),.06)}
+.chip.active{border-color:rgba(var(--em-rgb),.4);color:var(--em);background:rgba(var(--em-rgb),.1)}
+.chip.sky-chip:hover,.chip.sky-chip.active{border-color:rgba(56,189,248,.4);color:var(--sky);background:rgba(56,189,248,.07)}
+
+/* Price quickfill */
+.price-quick{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.35rem}
+.pq{padding:.22rem .55rem;border-radius:6px;background:var(--bg3);border:1px solid var(--line);font-size:.6rem;color:var(--t3);cursor:pointer;font-family:var(--font);transition:all .13s;white-space:nowrap}
+.pq:hover{border-color:rgba(var(--em-rgb),.3);color:var(--em);background:rgba(var(--em-rgb),.05)}
+
+/* Delivery method selector */
+.delivery-grid{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-bottom:.75rem}
+.dlv{background:var(--bg2);border:1.5px solid var(--line);border-radius:9px;padding:.6rem .75rem;cursor:pointer;transition:all .13s;user-select:none}
+.dlv:hover{border-color:var(--line2);background:var(--bg3)}
+.dlv.sel{border-color:rgba(var(--em-rgb),.4);background:rgba(var(--em-rgb),.06)}
+.dlv-name{font-size:.67rem;font-weight:700;color:var(--t2);margin-bottom:.15rem;display:flex;align-items:center;gap:.35rem}
+.dlv.sel .dlv-name{color:var(--em)}
+.dlv-desc{font-size:.58rem;color:var(--t4);line-height:1.4}
+.dlv-name svg{width:12px;height:12px;stroke:currentColor}
+
+/* Stock mode selector */
+.stock-tabs{display:flex;gap:.3rem;margin-bottom:.5rem}
+.stk{padding:.3rem .65rem;border-radius:6px;background:var(--bg2);border:1px solid var(--line);font-size:.62rem;color:var(--t3);cursor:pointer;font-family:var(--font);transition:all .13s}
+.stk.sel{background:rgba(var(--em-rgb),.08);border-color:rgba(var(--em-rgb),.3);color:var(--em)}
+
+/* Var box */
+.var-qs{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:.75rem .85rem;margin-top:.35rem}
+.var-qs-title{font-size:.63rem;font-weight:700;color:var(--t2);margin-bottom:.55rem;display:flex;align-items:center;gap:.35rem}
+
+/* Options toggles row */
+.opt-row{display:flex;gap:1.1rem;flex-wrap:wrap;align-items:center;padding:.55rem 0}
+.opt-item{display:flex;align-items:center;gap:.45rem;cursor:pointer;user-select:none}
+.opt-label{font-size:.64rem;color:var(--t2)}
+
 /* Footer */
-.apmd-foot{display:flex;gap:.5rem;padding:.85rem 1.25rem;border-top:1px solid var(--line);position:sticky;bottom:0;background:var(--bg1);z-index:2}
-.apmd-submit{flex:1;background:var(--em);color:#040d09;border:none;border-radius:var(--rs);padding:.6rem 1rem;font-family:var(--font);font-size:.75rem;font-weight:700;cursor:pointer;transition:opacity .15s}
-.apmd-submit:hover{opacity:.88}
-.apmd-cancel{background:var(--bg3);color:var(--t2);border:1px solid var(--line2);border-radius:var(--rs);padding:.6rem 1rem;font-family:var(--font);font-size:.75rem;font-weight:600;cursor:pointer;transition:all .15s}
+.apmd-foot{display:flex;gap:.5rem;padding:.75rem 1.1rem;border-top:1px solid var(--line);flex-shrink:0;align-items:center}
+.apmd-submit{flex:1;background:var(--em);color:#040d09;border:none;border-radius:var(--rs);padding:.6rem 1rem;font-family:var(--font);font-size:.73rem;font-weight:700;cursor:pointer;transition:opacity .13s;display:flex;align-items:center;justify-content:center;gap:.4rem}
+.apmd-submit:hover{opacity:.87}
+.apmd-cancel{background:var(--bg3);color:var(--t2);border:1px solid var(--line2);border-radius:var(--rs);padding:.6rem 1rem;font-family:var(--font);font-size:.72rem;font-weight:600;cursor:pointer;transition:all .13s;white-space:nowrap}
 .apmd-cancel:hover{border-color:var(--line3);color:var(--t1)}
+.apmd-foot-hint{font-size:.58rem;color:var(--t4);margin-left:.2rem}
+
 /* Field hint */
-.fh{font-size:.59rem;color:var(--t4);margin-top:.22rem;line-height:1.45}
+.fh{font-size:.59rem;color:var(--t4);margin-top:.2rem;line-height:1.45}
 .fh b{color:var(--t3)}
-/* Preset name pills */
+
+/* Legacy compat */
 .name-presets{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.35rem}
 .name-pill{padding:.18rem .55rem;border-radius:20px;background:var(--bg3);border:1px solid var(--line);font-size:.6rem;color:var(--t3);cursor:pointer;transition:all .14s}
 .name-pill:hover{border-color:rgba(var(--em-rgb),.3);color:var(--em);background:rgba(var(--em-rgb),.06)}
+
+/* Responsive: collapse sidebar on narrow screens */
+@media(max-width:540px){
+  .apmd-layout{flex-direction:column}
+  .apmd-types{width:100%;flex-direction:row;overflow-x:auto;overflow-y:hidden;border-right:none;border-bottom:1px solid var(--line);padding:.4rem .5rem;gap:.3rem;flex-wrap:nowrap}
+  .apmd-types-label{display:none}
+  .ptype{flex-direction:column;align-items:center;gap:.25rem;padding:.45rem .5rem;min-width:60px;text-align:center}
+  .ptype-sub{display:none}
+  .ptype-name{font-size:.58rem}
+}
 
 /* ─── CUSTOM CONFIRM MODAL ─── */
 .cfd-bg{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1.5rem;backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .18s}
@@ -353,9 +436,10 @@ body{overflow:hidden}
     <button class="nav-tab"    id="navDeposits"  onclick="showTab('deposits')">Deposit</button>
 
     <button class="nav-tab"    id="navPanelTpl" onclick="showTab('panel-tpl')">Template Panel</button>
+    <button class="nav-tab"    id="navReseller" onclick="showTab('reseller')">Reseller</button>
     <button class="nav-tab"    id="navMonitor"  onclick="showTab('monitor')">Monitor Server</button>
     <div class="nav-sep"></div>
-    <button class="nav-btn" onclick="loadCurrentTab()">&#8635;</button>
+    <button class="nav-btn" onclick="loadCurrentTab(true)">&#8635;</button>
     <a href="/" target="_blank" class="nav-btn">Toko</a>
     <div id="liveIndicator" style="display:none;align-items:center;gap:.3rem;font-size:.6rem;color:var(--em);padding:.2rem .5rem;border-radius:5px;border:1px solid rgba(52,211,153,.2);background:rgba(52,211,153,.06)"><span id="liveDot" style="width:6px;height:6px;border-radius:50%;background:var(--em);box-shadow:0 0 5px rgba(52,211,153,.6);animation:livePulse 1.8s infinite"></span>Live</div>
     <button class="nav-btn" onclick="doLogout()">Keluar</button>
@@ -429,17 +513,18 @@ body{overflow:hidden}
         <button class="tb-btn em-btn" onclick="addProduct()">+ Tambah Produk</button>
         <button class="tb-btn" onclick="loadProducts()">&#8635; Muat Ulang</button>
         <button class="save-btn" style="margin:0" onclick="saveProducts()">Simpan Semua Produk</button>
-        <span style="font-size:.6rem;color:var(--t3);margin-left:.2rem">⚠️ Perubahan hilang jika tidak disimpan</span>
+        <button class="tb-btn" onclick="seedPanelProducts()" title="Generate semua varian panel 1GB–Unlimited secara otomatis" style="background:rgba(99,102,241,.15);border-color:rgba(99,102,241,.35);color:#a5b4fc"> Auto-Generate Panel</button>
+        <span style="font-size:.6rem;color:var(--t3);margin-left:.2rem">!️ Perubahan hilang jika tidak disimpan</span>
       </div>
       <!-- Filter + Search bar -->
       <div class="prod-filter-bar" id="prodFilterBar">
         <button class="pf-cat on" data-cat="__all__" onclick="setProdCat('__all__',this)">Semua</button>
         <!-- category pills injected here by JS -->
-        <input class="prod-search" id="prodSearch" placeholder="🔍 Cari nama produk..." oninput="renderProducts()">
+        <input class="prod-search" id="prodSearch" placeholder=" Cari nama produk..." oninput="renderProducts()">
         <span class="prod-count" id="prodCount"></span>
       </div>
       <div style="background:rgba(var(--em-rgb),.04);border:1px solid rgba(var(--em-rgb),.12);border-radius:8px;padding:.5rem .85rem;margin-bottom:.6rem;font-size:.62rem;color:var(--t2);line-height:1.65" id="prodTipBox">
-        💡 <b>Tips:</b> Seret <b>☰</b> untuk ubah urutan. Filter kategori & pencarian di atas. Klik <b>Simpan Semua Produk</b> setelah selesai.
+         <b>Tips:</b> Seret <b>≡</b> untuk ubah urutan. Filter kategori & pencarian di atas. Klik <b>Simpan Semua Produk</b> setelah selesai.
       </div>
       <div id="productsContainer"><div class="tbl-empty"><span class="ld"><span></span><span></span><span></span></span> Memuat...</div></div>
     </div>
@@ -451,7 +536,7 @@ body{overflow:hidden}
         <button class="tb-btn" onclick="insertPresetCategories()" title="Isi kategori umum yang sering dipakai">Preset Kategori</button>
         <button class="save-btn" style="margin:0" onclick="saveCategories()">Simpan Kategori</button>
       </div>
-      <div style="font-size:.62rem;color:var(--t3);margin-bottom:.75rem;line-height:1.6">Kategori dipakai sebagai filter di halaman toko. Seret <b>☰</b> untuk atur urutan tampilan. Klik <b>Preset Kategori</b> untuk isi otomatis, atau tambah manual sesukamu.</div>
+      <div style="font-size:.62rem;color:var(--t3);margin-bottom:.75rem;line-height:1.6">Kategori dipakai sebagai filter di halaman toko. Seret <b>≡</b> untuk atur urutan tampilan. Klik <b>Preset Kategori</b> untuk isi otomatis, atau tambah manual sesukamu.</div>
       <div id="categoriesContainer"></div>
     </div>
 
@@ -626,11 +711,99 @@ body{overflow:hidden}
               <span style="font-size:.65rem;color:var(--t3)">Aktifkan captcha matematika di halaman order (mencegah spam)</span>
             </div>
           </div>
+
+          <!-- ── FIELD ORDER FORM ───────────────────────────────────────── -->
+          <div class="f-row" style="margin-top:.75rem">
+            <div class="f-label" style="margin-bottom:.6rem;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3)"> Field Form Order</div>
+
+            <!-- Phone field -->
+            <div style="background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:.85rem;margin-bottom:.5rem">
+              <div style="font-size:.75rem;font-weight:700;color:var(--t1);margin-bottom:.5rem"> Nomor WhatsApp</div>
+              <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem">
+                <label class="toggle-wrap"><input type="checkbox" id="cfgPhoneEnabled" onchange="_syncPhoneReq()"><span class="toggle-sl"></span></label>
+                <span style="font-size:.65rem;color:var(--t3)">Tampilkan field nomor WA di form order</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:.5rem">
+                <label class="toggle-wrap"><input type="checkbox" id="cfgPhoneRequired"><span class="toggle-sl"></span></label>
+                <span style="font-size:.65rem;color:var(--t3)">Wajib diisi (jika dinonaktifkan, jadi opsional)</span>
+              </div>
+            </div>
+
+            <!-- Custom fields -->
+            <div style="background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:.85rem">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+                <div style="font-size:.75rem;font-weight:700;color:var(--t1)">️ Field Tambahan</div>
+                <button onclick="addCustomField()" style="font-size:.63rem;padding:.3rem .7rem;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);border-radius:7px;color:var(--em);cursor:pointer;font-weight:700">+ Tambah Field</button>
+              </div>
+              <div style="font-size:.62rem;color:var(--t3);margin-bottom:.6rem;line-height:1.5">
+                Tambah kolom form sesuai kebutuhan (username, email, nomor HP lain, dll). Bisa diset wajib atau opsional, dan bisa dipilih untuk produk tertentu saja.
+              </div>
+              <div id="cfCustomFieldsList">
+                <div style="color:var(--t3);font-size:.7rem;padding:.4rem 0">Loading...</div>
+              </div>
+            </div>
+          </div>
           </div>
           <button class="save-btn" onclick="saveSettings()">Simpan Semua Pengaturan</button>
         </div>
       </div>
-      <!-- Webhook & Feed API -->
+      <!-- Iklan Popup -->
+      <div class="section">
+        <div class="sec-head"><span class="sec-title">🎯 Iklan Popup</span></div>
+        <div class="sec-body">
+          <div style="font-size:.63rem;color:var(--t3);margin-bottom:.85rem;line-height:1.7">
+            Iklan muncul sekali per sesi saat pengunjung baru membuka halaman utama. Tampil sebagai kotak miring yang bisa diklik.
+            Klik tombol <strong>×</strong> untuk menutup. Klik gambar → buka URL tujuan iklan.
+          </div>
+          <div class="f-row">
+            <div class="f-wrap">
+              <label class="f-label">Status Iklan</label>
+              <div style="display:flex;align-items:center;gap:.5rem;padding-top:.3rem">
+                <label class="toggle-wrap">
+                  <input type="checkbox" id="adEnabled" onchange="document.getElementById('adStatusLbl').textContent=this.checked?'AKTIF':'Nonaktif';document.getElementById('adStatusLbl').style.color=this.checked?'var(--em)':'var(--t3)'">
+                  <span class="toggle-sl"></span>
+                </label>
+                <span id="adStatusLbl" style="font-size:.65rem;font-weight:700;color:var(--t3)">Nonaktif</span>
+              </div>
+            </div>
+          </div>
+          <div class="f-row full" style="margin-top:.5rem">
+            <div class="f-wrap">
+              <label class="f-label">URL Gambar Iklan</label>
+              <input class="f-inp" id="adImageUrl" placeholder="https://example.com/promo.jpg" oninput="updateAdPreview()">
+              <div class="f-note">Ukuran yang direkomendasikan: 600×400px atau 600×600px. Kosongkan untuk tampilkan teks saja.</div>
+            </div>
+          </div>
+          <div class="f-row full">
+            <div class="f-wrap">
+              <label class="f-label">Teks Iklan <span style="color:var(--t3)">(opsional, muncul di bawah gambar)</span></label>
+              <textarea class="f-inp" id="adText" rows="2" style="resize:vertical" placeholder="Promo spesial hari ini! Klik untuk info lebih lanjut..." oninput="updateAdPreview()"></textarea>
+            </div>
+          </div>
+          <div class="f-row full">
+            <div class="f-wrap">
+              <label class="f-label">URL Tujuan saat Klik Gambar</label>
+              <input class="f-inp" id="adLinkUrl" placeholder="https://wa.me/62... atau https://tiktok.com/...">
+              <div class="f-note">Jika kosong, klik gambar tidak melakukan apa-apa. Tombol × tetap menutup iklan.</div>
+            </div>
+          </div>
+          <!-- Preview Iklan -->
+          <div id="adPreviewWrap" style="display:none;margin:.75rem 0 .5rem">
+            <div class="f-label" style="margin-bottom:.5rem">Preview Iklan</div>
+            <div style="display:flex;justify-content:center">
+              <div style="position:relative;max-width:220px;width:100%;transform:rotate(-3deg)">
+                <div id="adPreviewCard" style="background:#111;border:2px solid rgba(255,255,255,.13);border-radius:14px;overflow:hidden;box-shadow:0 16px 60px rgba(0,0,0,.85)">
+                  <img id="adPreviewImg" src="" alt="" style="width:100%;display:block;max-height:180px;object-fit:cover" onerror="this.style.display='none'">
+                  <div id="adPreviewText" style="padding:.55rem .75rem;font-size:.72rem;color:rgba(240,240,240,.85);font-family:inherit;border-top:1px solid rgba(255,255,255,.07);display:none"></div>
+                </div>
+                <div style="position:absolute;top:-9px;right:-9px;width:24px;height:24px;background:#1a1a1a;border:2px solid rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:rgba(240,240,240,.7)">✕</div>
+                <div style="position:absolute;bottom:-8px;left:10px;font-size:.48rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(240,240,240,.3);background:#111;border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:.15rem .45rem">Iklan</div>
+              </div>
+            </div>
+          </div>
+          <button class="save-btn" style="margin-top:.75rem" onclick="saveAdConfig()">Simpan Pengaturan Iklan</button>
+        </div>
+      </div>
       <div class="section">
         <div class="sec-head"><span class="sec-title">Webhook &amp; Feed API</span></div>
         <div class="sec-body">
@@ -965,7 +1138,7 @@ body{overflow:hidden}
         <div class="sec-head" style="display:flex;justify-content:space-between;align-items:center">
           <span class="sec-title">Dashboard Analitik</span>
           <div style="display:flex;align-items:center;gap:.5rem">
-            <span id="analyticsCacheLabel" style="font-size:.58rem;color:var(--t3);display:none">📦 dari cache</span>
+            <span id="analyticsCacheLabel" style="font-size:.58rem;color:var(--t3);display:none"> dari cache</span>
             <button class="tb-btn" onclick="loadAnalytics(true)">&#8635; Refresh</button>
           </div>
         </div>
@@ -1068,138 +1241,381 @@ body{overflow:hidden}
     <!-- ══ TAB: FLASH SALE ══ -->
 
 
+    <!-- ══ TAB: RESELLER ══ -->
+    <div class="tab" id="tabReseller">
+      <div class="stats" id="resellerStats">
+        <div class="sc"><div class="sc-lbl">Total Reseller</div><div class="sc-val sky" id="rsTotal">—</div></div>
+        <div class="sc"><div class="sc-lbl">Aktif</div><div class="sc-val em" id="rsActive">—</div></div>
+        <div class="sc"><div class="sc-lbl">Nonaktif</div><div class="sc-val red" id="rsInactive">—</div></div>
+      </div>
+
+      <!-- Form Tambah Reseller -->
+      <div class="section">
+        <div class="sec-head" onclick="toggleSec(this)">
+          <span class="sec-title">Tambah Akun Reseller</span>
+          <svg class="sec-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" width="13" height="13"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="sec-body">
+          <div class="f-row">
+            <div class="f-wrap">
+              <div class="f-label">Username</div>
+              <input class="f-inp" id="rsNewUser" type="text" placeholder="3-20 karakter, a-z 0-9 _" autocapitalize="none">
+              <div class="f-note">Huruf kecil, angka, underscore saja.</div>
+            </div>
+            <div class="f-wrap">
+              <div class="f-label">Password</div>
+              <input class="f-inp" id="rsNewPass" type="text" placeholder="minimal 6 karakter">
+              <div class="f-note">Password awal akun reseller.</div>
+            </div>
+          </div>
+          <div class="f-row">
+            <div class="f-wrap">
+              <div class="f-label">Maks Server</div>
+              <input class="f-inp" id="rsNewMax" type="number" value="10" min="1" max="9999">
+              <div class="f-note">Jumlah server yang boleh dibuat.</div>
+            </div>
+            <div class="f-wrap">
+              <div class="f-label">Plan yang Diizinkan</div>
+              <input class="f-inp" id="rsNewPlans" type="text" placeholder="1gb, 2gb, 4gb (kosong = semua)">
+              <div class="f-note">Pisahkan koma. Kosong = izinkan semua plan aktif.</div>
+            </div>
+          </div>
+          <button class="save-btn" id="rsCreateBtn" onclick="createReseller()">Buat Akun Reseller</button>
+        </div>
+      </div>
+
+      <!-- Daftar Reseller -->
+      <div class="section" style="margin-top:.5rem">
+        <div class="sec-head" style="cursor:default;flex-wrap:wrap;gap:.4rem">
+          <span class="sec-title">Daftar Reseller</span>
+          <div style="display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;margin-left:auto">
+            <input class="tb-search" id="rsSearch" placeholder="Cari username..." oninput="renderResellersTable()" style="max-width:180px;min-width:120px">
+            <button class="tb-btn" onclick="loadResellers()">↻ Muat</button>
+            <a href="/cpanel" target="_blank" class="tb-btn" style="text-decoration:none">cPanel</a>
+          </div>
+        </div>
+        <div class="tbl-wrap" style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr>
+              <th>Username</th>
+              <th>Status</th>
+              <th>Plan Diizinkan</th>
+              <th>Maks Server</th>
+              <th>Bergabung</th>
+              <th>Login Terakhir</th>
+              <th>Aksi</th>
+            </tr></thead>
+            <tbody id="resellersBody">
+              <tr><td colspan="7" class="tbl-empty"><span class="ld"><span></span><span></span><span></span></span> Memuat...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
   </div><!-- /app-body -->
 </div><!-- /app -->
 
 <!-- ══ ADD PRODUCT MODAL ══ -->
 <div class="apmd-bg" id="apmdBg">
   <div class="apmd" id="apmd">
+
+    <!-- Header -->
     <div class="apmd-head">
       <div class="apmd-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="16" height="16"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        Tambah Produk Baru
-        <span class="apmd-step">Langkah Cepat</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="15" height="15"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Tambah Produk
+        <span class="apmd-title-sub">— isi form lalu klik Buat Produk</span>
       </div>
-      <button class="apmd-close" onclick="closeAddProductModal()">✕</button>
+      <button class="apmd-close" onclick="closeAddProductModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
-    <div class="apmd-body">
-      <!-- Step 1: Type -->
-      <div class="apmd-sec">① Pilih Tipe Produk</div>
-      <div class="type-grid" id="apmdTypeGrid">
-        <div class="type-card selected" data-type="panel" onclick="selectProdType(this,'panel')">
-          <div class="type-card-icon">🖥️</div>
-          <div class="type-card-name">Panel Hosting</div>
-          <div class="type-card-desc">Server Pterodactyl. Pembeli dapat username, password & domain otomatis.</div>
-        </div>
-        <div class="type-card" data-type="digital" onclick="selectProdType(this,'digital')">
-          <div class="type-card-icon">🔑</div>
-          <div class="type-card-name">Konten Digital</div>
-          <div class="type-card-desc">Akun, teks, kode lisensi, atau apapun yang dikirim sebagai teks/gambar/video.</div>
-        </div>
-        <div class="type-card" data-type="download" onclick="selectProdType(this,'download')">
-          <div class="type-card-icon">📦</div>
-          <div class="type-card-name">File Download</div>
-          <div class="type-card-desc">File ZIP, APK, preset, template, atau file lain via URL CDN/Drive/Mega.</div>
-        </div>
-        <div class="type-card" data-type="link" onclick="selectProdType(this,'link')">
-          <div class="type-card-icon">🔗</div>
-          <div class="type-card-name">Link / Redirect</div>
-          <div class="type-card-desc">Arahkan pembeli ke URL tertentu setelah bayar. Cocok untuk Lynk.id, dll.</div>
-        </div>
-        <div class="type-card" data-type="sewabot" onclick="selectProdType(this,'sewabot')">
-          <div class="type-card-icon">🤖</div>
-          <div class="type-card-name">Sewa Bot WA</div>
-          <div class="type-card-desc">Pembeli input link grup. Admin pasang bot secara manual setelah bayar.</div>
-        </div>
-      </div>
-      <!-- Type hint box -->
-      <div class="apmd-hint" id="apmdTypeHint">
-        <b>Panel Hosting:</b> Sistem akan otomatis membuat server di Pterodactyl dan mengirim kredensial ke pembeli. Kamu perlu mengisi Template Plan terlebih dahulu di tab <b>Template Panel</b>.
-      </div>
 
-      <!-- Step 2: Basic Info -->
-      <div class="apmd-sec">② Info Dasar Produk</div>
-      <div class="f-row full" style="margin-bottom:.5rem">
-        <div class="f-wrap">
-          <label class="f-label">Nama Produk <span style="color:var(--red)">*</span></label>
-          <input class="f-inp" id="apmdName" placeholder="Contoh: Netflix Premium 1 Bulan, Panel Hosting 1GB, Preset LUT Cinematic...">
-          <div class="fh">Nama ini tampil di halaman toko. Gunakan nama yang <b>jelas & menarik</b>.</div>
-          <div class="name-presets" id="apmdNamePresets"></div>
-        </div>
-      </div>
-      <div class="f-row" style="margin-bottom:.5rem">
-        <div class="f-wrap">
-          <label class="f-label">Kategori</label>
-          <input class="f-inp" id="apmdCat" placeholder="Pilih atau ketik kategori..." list="apmdCatList">
-          <datalist id="apmdCatList"></datalist>
-          <div class="fh">Dipakai sebagai filter di toko. Pilih dari kategori yang sudah ada.</div>
-        </div>
-        <div class="f-wrap">
-          <label class="f-label">Foto Produk (URL)</label>
-          <input class="f-inp" id="apmdThumb" placeholder="https://i.imgur.com/... atau https://cdn...">
-          <div class="fh">URL gambar langsung (JPG/PNG/WebP). Kosongkan jika belum punya.</div>
-        </div>
-      </div>
-      <div class="f-row full" style="margin-bottom:.5rem">
-        <div class="f-wrap">
-          <label class="f-label">Deskripsi Singkat (opsional)</label>
-          <input class="f-inp" id="apmdDesc" placeholder="Contoh: Garansi 30 hari, full akses, support 24 jam...">
-          <div class="fh">Tampil di bawah nama produk di halaman toko. Singkat, padat, menarik.</div>
-        </div>
-      </div>
+    <!-- Two-column body -->
+    <div class="apmd-layout">
 
-      <!-- Step 3: First Variant -->
-      <div class="apmd-sec">③ Varian Pertama (opsional)</div>
-      <div class="apmd-hint" id="apmdVariantHint">
-        Setiap produk bisa punya banyak varian (misal: 1 Bulan, 3 Bulan, 1 Tahun). Isi varian pertama di sini, atau biarkan kosong lalu tambah varian di kartu produk setelah tersimpan.
-      </div>
-      <div class="var-qs" id="apmdVarSection">
-        <div class="var-qs-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="13" height="13"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          Varian Pertama
-        </div>
-        <div class="f-row">
-          <div class="f-wrap">
-            <label class="f-label">Nama Varian</label>
-            <input class="f-inp" id="apmdVarName" placeholder="Contoh: 1 Bulan, 1GB, Starter...">
+      <!-- LEFT: Type selector -->
+      <div class="apmd-types" id="apmdTypes">
+        <div class="apmd-types-label">Tipe Produk</div>
+
+        <div class="ptype sel" data-type="panel" onclick="selectProdType(this,'panel')">
+          <div class="ptype-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
           </div>
-          <div class="f-wrap">
-            <label class="f-label">Harga (Rp, 0 = Gratis)</label>
-            <input class="f-inp" id="apmdVarPrice" type="number" min="0" placeholder="25000">
+          <div class="ptype-info">
+            <div class="ptype-name">Panel Hosting</div>
+            <div class="ptype-sub">Pterodactyl otomatis</div>
           </div>
         </div>
-        <div class="f-row full" style="margin-top:.4rem" id="apmdVarContentWrap">
-          <div class="f-wrap">
-            <label class="f-label" id="apmdVarContentLabel">Konten / Data Akun</label>
-            <textarea class="f-inp" id="apmdVarContent" rows="2" style="resize:vertical" placeholder="Username: xxx&#10;Password: xxx&#10;..."></textarea>
-            <div class="fh" id="apmdVarContentHint">Ini yang dikirim ke pembeli setelah bayar. Untuk digital: tulis akun/kode. Untuk download/link: tulis URL file/link tujuan.</div>
+
+        <div class="ptype" data-type="streaming" onclick="selectProdType(this,'streaming')">
+          <div class="ptype-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+          </div>
+          <div class="ptype-info">
+            <div class="ptype-name">Akun Streaming</div>
+            <div class="ptype-sub">Netflix, Spotify, dll</div>
+          </div>
+        </div>
+
+        <div class="ptype" data-type="software" onclick="selectProdType(this,'software')">
+          <div class="ptype-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M8 10l-2 2 2 2M16 10l2 2-2 2M12 8l-2 8"/></svg>
+          </div>
+          <div class="ptype-info">
+            <div class="ptype-name">Software / Lisensi</div>
+            <div class="ptype-sub">Key, aktivasi, akses</div>
+          </div>
+        </div>
+
+        <div class="ptype" data-type="digital" onclick="selectProdType(this,'digital')">
+          <div class="ptype-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="ptype-info">
+            <div class="ptype-name">Konten Digital</div>
+            <div class="ptype-sub">Teks, kode, akun</div>
+          </div>
+        </div>
+
+        <div class="ptype" data-type="voucher" onclick="selectProdType(this,'voucher')">
+          <div class="ptype-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+          </div>
+          <div class="ptype-info">
+            <div class="ptype-name">Voucher / Gift</div>
+            <div class="ptype-sub">Top-up, gift card</div>
+          </div>
+        </div>
+
+        <div class="ptype" data-type="download" onclick="selectProdType(this,'download')">
+          <div class="ptype-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </div>
+          <div class="ptype-info">
+            <div class="ptype-name">File Download</div>
+            <div class="ptype-sub">APK, template, ZIP</div>
+          </div>
+        </div>
+
+        <div class="ptype" data-type="jasa" onclick="selectProdType(this,'jasa')">
+          <div class="ptype-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          </div>
+          <div class="ptype-info">
+            <div class="ptype-name">Jasa / Service</div>
+            <div class="ptype-sub">Joki, setup, edit</div>
+          </div>
+        </div>
+
+        <div class="ptype" data-type="sewabot" onclick="selectProdType(this,'sewabot')">
+          <div class="ptype-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/></svg>
+          </div>
+          <div class="ptype-info">
+            <div class="ptype-name">Sewa Bot WA</div>
+            <div class="ptype-sub">Pasang manual</div>
+          </div>
+        </div>
+
+        <div class="ptype" data-type="link" onclick="selectProdType(this,'link')">
+          <div class="ptype-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          </div>
+          <div class="ptype-info">
+            <div class="ptype-name">Link / Redirect</div>
+            <div class="ptype-sub">Lynk.id, private URL</div>
+          </div>
+        </div>
+
+        <div class="ptype" data-type="course" onclick="selectProdType(this,'course')">
+          <div class="ptype-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
+          <div class="ptype-info">
+            <div class="ptype-name">Kursus / E-Book</div>
+            <div class="ptype-sub">Materi, tutorial, PDF</div>
+          </div>
+        </div>
+
+        <div class="ptype" data-type="topup" onclick="selectProdType(this,'topup')">
+          <div class="ptype-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          </div>
+          <div class="ptype-info">
+            <div class="ptype-name">Top-Up / Game</div>
+            <div class="ptype-sub">Diamond, UC, Robux</div>
           </div>
         </div>
       </div>
 
-      <!-- Options -->
-      <div class="apmd-sec">④ Opsi Tambahan</div>
-      <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
-        <label style="display:flex;align-items:center;gap:.4rem;cursor:pointer;font-size:.67rem;color:var(--t2)">
-          <input type="checkbox" id="apmdIsNew" checked style="accent-color:var(--em);width:14px;height:14px">
-          Badge "Baru" pada produk
-        </label>
-        <label style="display:flex;align-items:center;gap:.4rem;cursor:pointer;font-size:.67rem;color:var(--t2)">
-          <input type="checkbox" id="apmdActive" checked style="accent-color:var(--em);width:14px;height:14px">
-          Langsung aktif / tampil di toko
-        </label>
-        <label style="display:flex;align-items:center;gap:.4rem;cursor:pointer;font-size:.67rem;color:var(--t2)">
-          <input type="checkbox" id="apmdScrollTo" checked style="accent-color:var(--sky);width:14px;height:14px">
-          Scroll ke produk setelah dibuat
-        </label>
-      </div>
-    </div>
+      <!-- RIGHT: Form -->
+      <div class="apmd-form" id="apmdForm">
+
+        <!-- Type info banner -->
+        <div class="apmd-info" id="apmdInfo"></div>
+
+        <!-- Basic Info -->
+        <div class="apmd-sec">Info Produk</div>
+
+        <div class="f-row full" style="margin-bottom:.55rem">
+          <div class="f-wrap">
+            <label class="f-label">Nama Produk <span style="color:var(--red)">*</span></label>
+            <input class="f-inp" id="apmdName" placeholder="Tulis nama produk...">
+            <div class="chip-row" id="apmdNameChips"></div>
+          </div>
+        </div>
+
+        <div class="f-row" style="margin-bottom:.55rem">
+          <div class="f-wrap">
+            <label class="f-label">Kategori</label>
+            <input class="f-inp" id="apmdCat" placeholder="Pilih atau ketik..." list="apmdCatList" autocomplete="off">
+            <datalist id="apmdCatList"></datalist>
+            <div class="chip-row" id="apmdCatChips"></div>
+          </div>
+          <div class="f-wrap">
+            <label class="f-label">Foto Produk (URL)</label>
+            <div style="display:flex;gap:.4rem;align-items:flex-start">
+              <div style="flex:1">
+                <input class="f-inp" id="apmdThumb" placeholder="https://i.imgur.com/..." oninput="previewThumb(this.value)">
+                <div class="fh">URL gambar langsung (JPG/PNG/WebP). Biarkan kosong jika belum ada.</div>
+              </div>
+              <div id="apmdThumbPreview" style="width:44px;height:44px;border-radius:8px;background:var(--bg3);border:1px solid var(--line);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-top:0">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18" style="opacity:.25"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="f-row full" style="margin-bottom:.2rem">
+          <div class="f-wrap">
+            <label class="f-label">Deskripsi <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--t4)">— tampil di bawah nama produk di toko</span></label>
+            <input class="f-inp" id="apmdDesc" placeholder="Singkat & menarik...">
+            <div class="chip-row" id="apmdDescChips"></div>
+          </div>
+        </div>
+
+        <!-- Delivery Method (hidden for panel) -->
+        <div id="apmdDeliverySection">
+          <div class="apmd-sec">Cara Pengiriman Konten</div>
+          <div class="delivery-grid">
+            <div class="dlv sel" data-dlv="auto" onclick="selectDelivery(this,'auto')">
+              <div class="dlv-name">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Otomatis
+              </div>
+              <div class="dlv-desc">Konten dikirim ke pembeli langsung setelah bayar, tanpa perlu aksi admin.</div>
+            </div>
+            <div class="dlv" data-dlv="manual" onclick="selectDelivery(this,'manual')">
+              <div class="dlv-name">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Manual Admin
+              </div>
+              <div class="dlv-desc">Admin proses &amp; kirim konten secara manual via WA/Telegram setelah konfirmasi bayar.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Variant section -->
+        <div class="apmd-sec">Varian Pertama <span style="font-size:.55rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--t4)">(opsional — bisa tambah varian lain setelah tersimpan)</span></div>
+
+        <div class="var-qs" id="apmdVarSection">
+
+          <!-- Panel: template picker -->
+          <div id="apmdTplRow" style="display:none;margin-bottom:.65rem;padding:.5rem .6rem;background:rgba(var(--em-rgb),.04);border:1px solid rgba(var(--em-rgb),.12);border-radius:8px">
+            <div style="font-size:.59rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t4);margin-bottom:.35rem">Isi dari Template Panel</div>
+            <div style="display:flex;gap:.4rem;align-items:center">
+              <select id="apmdTplSel" class="f-inp" style="flex:1;font-size:.68rem"><option value="">— Pilih template —</option></select>
+              <button type="button" onclick="applyPanelTemplate()" style="padding:.38rem .75rem;font-size:.64rem;font-weight:700;background:rgba(var(--em-rgb),.12);color:var(--em);border:1px solid rgba(var(--em-rgb),.3);border-radius:6px;cursor:pointer;font-family:var(--font);white-space:nowrap">Terapkan</button>
+            </div>
+          </div>
+
+          <div class="var-qs-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="13" height="13"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+            Detail Varian
+          </div>
+
+          <div class="f-row" style="margin-bottom:.5rem">
+            <div class="f-wrap">
+              <label class="f-label">Nama Varian</label>
+              <input class="f-inp" id="apmdVarName" placeholder="Contoh: 1 Bulan, 1GB, Starter...">
+              <div class="chip-row" id="apmdVarNameChips"></div>
+            </div>
+            <div class="f-wrap">
+              <label class="f-label">Harga (Rp)</label>
+              <div style="display:flex;align-items:center;gap:.35rem">
+                <button type="button" onclick="adjPrice(-1000)" style="flex-shrink:0;width:28px;height:28px;border:1px solid var(--line);border-radius:6px;background:var(--bg3);color:var(--t2);font-size:.9rem;cursor:pointer;font-family:var(--font);line-height:1">−</button>
+                <input class="f-inp" id="apmdVarPrice" type="number" min="0" placeholder="0 = Gratis" style="text-align:center">
+                <button type="button" onclick="adjPrice(1000)" style="flex-shrink:0;width:28px;height:28px;border:1px solid var(--line);border-radius:6px;background:var(--bg3);color:var(--t2);font-size:.9rem;cursor:pointer;font-family:var(--font);line-height:1">+</button>
+              </div>
+              <div class="price-quick" id="apmdPriceQuick"></div>
+            </div>
+          </div>
+
+          <!-- Stock mode -->
+          <div style="margin-bottom:.55rem">
+            <label class="f-label">Stok</label>
+            <div class="stock-tabs" id="apmdStockTabs">
+              <button class="stk sel" data-stk="-1" onclick="selectStock(this,-1)">Unlimited</button>
+              <button class="stk" data-stk="custom" onclick="selectStock(this,'custom')">Isi Manual</button>
+            </div>
+            <input class="f-inp" id="apmdStockInput" type="number" min="1" placeholder="Jumlah stok" style="display:none;margin-top:.35rem;max-width:140px">
+          </div>
+
+          <!-- Content area (type-dependent) -->
+          <div id="apmdVarContentWrap">
+            <label class="f-label" id="apmdVarContentLabel">Konten</label>
+            <textarea class="f-inp" id="apmdVarContent" rows="2" style="resize:vertical" placeholder="..."></textarea>
+            <div class="fh" id="apmdVarContentHint"></div>
+          </div>
+
+          <!-- Duration (sewabot / jasa) -->
+          <div id="apmdDurationWrap" style="display:none;margin-top:.5rem">
+            <label class="f-label">Durasi Default</label>
+            <div class="chip-row">
+              <span class="chip sky-chip" onclick="setDuration(7)">7 Hari</span>
+              <span class="chip sky-chip" onclick="setDuration(14)">14 Hari</span>
+              <span class="chip sky-chip" onclick="setDuration(30)">30 Hari</span>
+              <span class="chip sky-chip" onclick="setDuration(60)">60 Hari</span>
+              <span class="chip sky-chip" onclick="setDuration(90)">90 Hari</span>
+            </div>
+            <input class="f-inp" id="apmdDuration" type="number" min="1" placeholder="Atau ketik hari..." style="margin-top:.35rem;max-width:160px">
+          </div>
+
+        </div>
+
+        <!-- Options -->
+        <div class="apmd-sec" style="margin-top:1rem">Pengaturan Tampilan</div>
+        <div class="opt-row">
+          <label class="opt-item">
+            <label class="toggle-wrap"><input type="checkbox" id="apmdIsNew" checked><span class="toggle-sl"></span></label>
+            <span class="opt-label">Badge "Baru"</span>
+          </label>
+          <label class="opt-item">
+            <label class="toggle-wrap"><input type="checkbox" id="apmdActive" checked><span class="toggle-sl"></span></label>
+            <span class="opt-label">Langsung aktif di toko</span>
+          </label>
+          <label class="opt-item">
+            <label class="toggle-wrap"><input type="checkbox" id="apmdScrollTo" checked><span class="toggle-sl"></span></label>
+            <span class="opt-label">Scroll ke produk setelah dibuat</span>
+          </label>
+        </div>
+
+      </div><!-- /apmd-form -->
+    </div><!-- /apmd-layout -->
+
+    <!-- Footer -->
     <div class="apmd-foot">
       <button class="apmd-cancel" onclick="closeAddProductModal()">Batal</button>
       <button class="apmd-submit" onclick="submitAddProduct()">
-        ✦ Buat Produk &amp; Edit Detail
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" width="13" height="13"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Buat Produk &amp; Edit Detail
       </button>
+      <span class="apmd-foot-hint">Varian &amp; harga lengkap bisa diatur di kartu produk setelah disimpan</span>
     </div>
+
   </div>
 </div>
 
@@ -1224,7 +1640,7 @@ var TOKEN = localStorage.getItem('ps_admin_token') || '';
 document.addEventListener('DOMContentLoaded', function() {
   if (!TOKEN) return;
   aFetch('GET', '/api/admin/stats').then(function(j) {
-    if (j && j.ok !== false) {
+    if (j && j.ok === true) {
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('app').classList.add('show');
       loadAll();
@@ -1236,7 +1652,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function doLogin() {
   var pass = document.getElementById('passInp').value;
-  if (!pass) return;
+  if (!pass) { document.getElementById('loginErr').textContent = 'Masukkan password terlebih dahulu.'; return; }
   document.getElementById('loginErr').textContent = '';
   var btn = document.getElementById('loginBtn');
   btn.disabled = true; btn.textContent = '...';
@@ -1393,40 +1809,74 @@ function showTab(name) {
   currentTab = name;
   document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('on'); });
   document.querySelectorAll('.nav-tab').forEach(function(b){ b.classList.remove('on'); });
-  var tabIdMap = {'panel-tpl':'tabPanelTpl', monitor:'tabMonitor', analytics:'tabAnalytics', vouchers:'tabVouchers'};
+  var tabIdMap = {'panel-tpl':'tabPanelTpl', monitor:'tabMonitor', analytics:'tabAnalytics', vouchers:'tabVouchers', reseller:'tabReseller'};
   var tabEl = tabIdMap[name] ? document.getElementById(tabIdMap[name]) : document.getElementById('tab' + name.charAt(0).toUpperCase() + name.slice(1));
   if (tabEl) tabEl.classList.add('on');
-  var navMap = {trx:'Trx', panels:'Panels', products:'Products', categories:'Categories', slides:'Slides', settings:'Settings', users:'Users', 'panel-tpl':'PanelTpl', monitor:'Monitor', analytics:'Analytics', vouchers:'Vouchers', sewabot:'Sewabot'};
+  var navMap = {trx:'Trx', panels:'Panels', products:'Products', categories:'Categories', slides:'Slides', settings:'Settings', users:'Users', 'panel-tpl':'PanelTpl', monitor:'Monitor', analytics:'Analytics', vouchers:'Vouchers', sewabot:'Sewabot', deposits:'Deposits', reseller:'Reseller'};
   document.getElementById('nav' + navMap[name]).classList.add('on');
   loadCurrentTab();
 }
 
-function loadCurrentTab() {
-  if (currentTab === 'trx')      loadTrx();
-  else if (currentTab === 'panels')   loadPanels();
-  else if (currentTab === 'products') loadProducts();
-  else if (currentTab === 'categories') loadCategories();
-  else if (currentTab === 'slides')   loadSlides();
-  else if (currentTab === 'settings') loadSettings();
-  else if (currentTab === 'users')    loadUsers();
-  else if (currentTab === 'panel-tpl') loadPanelTemplates();
-  else if (currentTab === 'monitor')  loadMonitor();
-  else if (currentTab === 'analytics') loadAnalytics();
-  else if (currentTab === 'vouchers')  loadVouchers();
-  else if (currentTab === 'sewabot')   loadSewabotOrders();
-  else if (currentTab === 'deposits')  loadAdminDeposits();
+function _isAnyModalOpen() {
+  // Cek apakah modal Add Produk atau modal lain sedang terbuka
+  var apmd = document.getElementById('apmdBg');
+  if (apmd && apmd.classList.contains('on')) return true;
+  return false;
+}
 
+function loadCurrentTab(force) {
+  // Jangan reload jika ada modal yang sedang terbuka dan user sedang input
+  // kecuali dipaksa (force=true) — ini cegah ketikan hilang saat SSE reconnect
+  if (!force && _isAnyModalOpen()) return;
+
+  if (currentTab === 'trx')         loadTrx();
+  else if (currentTab === 'panels')      loadPanels();
+  else if (currentTab === 'products')    loadProducts();
+  else if (currentTab === 'categories')  loadCategories();
+  else if (currentTab === 'slides')      loadSlides();
+  else if (currentTab === 'settings')    loadSettings();
+  else if (currentTab === 'users')       loadUsers();
+  else if (currentTab === 'panel-tpl')   loadPanelTemplates();
+  else if (currentTab === 'monitor')     loadMonitor();
+  else if (currentTab === 'analytics')   loadAnalytics();
+  else if (currentTab === 'vouchers')    loadVouchers();
+  else if (currentTab === 'sewabot')     loadSewabotOrders();
+  else if (currentTab === 'deposits')    loadAdminDeposits();
+  else if (currentTab === 'reseller')    loadResellers();
+}
+
+// ── ADMIN BATCH FETCH: 1 request gabungan untuk data yang sering dipakai sama
+// Ini hemat GitHub API secara signifikan karena data di-cache & di-share antar tab
+var _adminBatchCache = null;
+var _adminBatchExp   = 0;
+var _adminBatchTTL   = 45 * 1000; // 45 detik
+
+async function adminBatchFetch(forceRefresh) {
+  if (!forceRefresh && _adminBatchCache && Date.now() < _adminBatchExp) {
+    return _adminBatchCache;
+  }
+  // Fetch stats + settings dalam satu kali call (dari endpoint existing)
+  // Stats dan trx sudah dihandle SSE, jadi kita fokus pada settings & templates
+  try {
+    var [settingsJ, tplJ] = await Promise.all([
+      aFetch('GET', '/api/admin/settings'),
+      aFetch('GET', '/api/admin/panel-templates'),
+    ]);
+    _adminBatchCache = { settings: settingsJ.ok ? settingsJ.data : null, templates: tplJ.ok ? tplJ.data : [] };
+    _adminBatchExp   = Date.now() + _adminBatchTTL;
+    return _adminBatchCache;
+  } catch(e) { return { settings: null, templates: [] }; }
 }
 
 function loadAll() {
   loadTrx(); loadStats(); startAdminSSE();
-  // Pre-load panel templates so Add Product modal can use them immediately
-  aFetch('GET', '/api/admin/panel-templates').then(function(j){
-    if (j && j.ok && j.data) { tplData = j.data; window._panelTemplatesCache = j.data; }
-  }).catch(function(){});
-  // Apply bg + theme on load so admin sees it immediately
-  fetch('/api/products').then(function(r){return r.json();}).then(function(j){
-    if (j && j.settings) applyGlobalSettings(j.settings);
+  // Gabungkan fetch settings + templates dalam satu batch — hemat 1 GitHub request
+  adminBatchFetch().then(function(batch) {
+    if (batch.templates && batch.templates.length) {
+      tplData = batch.templates;
+      window._panelTemplatesCache = batch.templates;
+    }
+    if (batch.settings) applyGlobalSettings(batch.settings);
   }).catch(function(){});
 }
 
@@ -1797,6 +2247,43 @@ aFetch = function(method, url, data) {
 // ═══════════════════════════════════════════════════
 var productsData = [];
 
+async function seedPanelProducts() {
+  // Ask user: merge or replace
+  var choice = confirm(
+    ' AUTO-GENERATE PANEL PRODUCTS\n\n' +
+    'Ini akan membuat 21 varian panel (1GB – Unlimited) secara otomatis dengan harga default:\n' +
+    '• 1GB = Rp5.000  |  2GB = Rp6.000  |  dst...\n' +
+    '• Unlimited = Rp40.000\n\n' +
+    'OK  → Gabungkan dengan produk existing (produk panel lama akan diganti)\n' +
+    'Batal → Batalkan'
+  );
+  if (!choice) return;
+
+  var replace = confirm(
+    '!️ Pilih mode:\n\n' +
+    'OK  → REPLACE semua produk (hanya panel product yang tersisa)\n' +
+    'Batal → MERGE (pertahankan produk lain, hanya panel yang di-update)'
+  );
+
+  try {
+    toast('Generating 21 varian panel...', 'info');
+    var r = await aFetch('POST', '/api/admin/seed-products', {
+      confirm: true,
+      merge: !replace,
+    });
+    if (r.ok) {
+      toast('OK ' + r.message, 'ok');
+      // Show price preview
+      if (r.preview && r.preview.length) {
+        console.log('[seed] Varian yang dibuat:\n' + r.preview.join('\n'));
+      }
+      setTimeout(loadProducts, 800);
+    } else {
+      toast('Gagal: ' + (r.message || 'Unknown error'), 'err');
+    }
+  } catch(e) { toast('Error: ' + e.message, 'err'); }
+}
+
 async function loadProducts() {
   document.getElementById('productsContainer').innerHTML = '<div class="tbl-empty"><span class="ld"><span></span><span></span><span></span></span> Memuat...</div>';
   try {
@@ -1866,10 +2353,10 @@ function renderProducts() {
   var isDraggable = (catF === '__all__' && !q);
   if (tipBox) {
     if (isDraggable) {
-      tipBox.innerHTML = '💡 <b>Tips:</b> Seret <b>☰</b> untuk ubah urutan. Filter & pencarian aktif di atas. Klik <b>Simpan Semua Produk</b> setelah selesai.';
+      tipBox.innerHTML = ' <b>Tips:</b> Seret <b>≡</b> untuk ubah urutan. Filter & pencarian aktif di atas. Klik <b>Simpan Semua Produk</b> setelah selesai.';
       tipBox.style.borderColor = 'rgba(var(--em-rgb),.12)';
     } else {
-      tipBox.innerHTML = '🔍 Sedang memfilter — urutan tampil sesuai filter. <b>Nonaktifkan filter & search</b> untuk mengatur urutan via drag.';
+      tipBox.innerHTML = ' Sedang memfilter — urutan tampil sesuai filter. <b>Nonaktifkan filter & search</b> untuk mengatur urutan via drag.';
       tipBox.style.borderColor = 'rgba(251,191,36,.2)';
     }
   }
@@ -2257,7 +2744,7 @@ function buildVariantCard(pi, vi) {
 
     var dpTitle = document.createElement('div');
     dpTitle.style.cssText = 'font-size:.57rem;font-weight:700;color:var(--t3);text-transform:uppercase;margin:.55rem 0 .3rem';
-    dpTitle.textContent = 'Harga per Durasi (MB; 0 = pakai harga utama)';
+    dpTitle.textContent = 'Harga per Durasi (Rp; 0 = pakai harga utama)';
     vc.appendChild(dpTitle);
 
     var dpg = document.createElement('div'); dpg.className='dp-grid';
@@ -2294,14 +2781,14 @@ function buildVariantCard(pi, vi) {
     vc.appendChild(sbRow);
     var sbNote = document.createElement('div');
     sbNote.style.cssText = 'font-size:.6rem;color:var(--t3);margin-top:.3rem;padding:.4rem .5rem;background:rgba(139,92,246,.05);border:1px solid rgba(139,92,246,.15);border-radius:6px';
-    sbNote.innerHTML = '⚠️ <b>Penting:</b> Isi field <b>Durasi (hari)</b> sesuai nama varian! Contoh varian "7 Hari" → durasi isi <b>7</b>. Default 30 sering salah.<br>Pembeli input link grup WA saat checkout. Admin pasang bot manual setelah bayar.';
+    sbNote.innerHTML = '!️ <b>Penting:</b> Isi field <b>Durasi (hari)</b> sesuai nama varian! Contoh varian "7 Hari" → durasi isi <b>7</b>. Default 30 sering salah.<br>Pembeli input link grup WA saat checkout. Admin pasang bot manual setelah bayar.';
     vc.appendChild(sbNote);
 
   } else {
     // ── Content type fields
     var ctg = document.createElement('div'); ctg.className = 'f-row';
     var ctSel = document.createElement('select'); ctSel.className='f-inp';
-    var ctypes = [{v:'account',l:'📦 Multi-Akun (Stok Otomatis)'},{v:'text',l:'Teks / Akun'},{v:'image',l:'Gambar'},{v:'video',l:'Video'},{v:'audio',l:'Audio / MP3'},{v:'link',l:'Link URL (redirect)'},{v:'file',l:'File Download (ZIP/APK/dll)'}];
+    var ctypes = [{v:'account',l:' Multi-Akun (Stok Otomatis)'},{v:'text',l:'Teks / Akun'},{v:'image',l:'Gambar'},{v:'video',l:'Video'},{v:'audio',l:'Audio / MP3'},{v:'link',l:'Link URL (redirect)'},{v:'file',l:'File Download (ZIP/APK/dll)'}];
     ctypes.forEach(function(o){
       var opt = document.createElement('option'); opt.value=o.v; opt.textContent=o.l;
       if((v.contentType||'text')===o.v) opt.selected=true;
@@ -2344,7 +2831,7 @@ function updateContentFields(container, pi, vi, ct, v) {
     acctHead.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem';
     var acctTitle = document.createElement('span');
     acctTitle.style.cssText = 'font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--em)';
-    acctTitle.textContent = '📦 Stok Akun';
+    acctTitle.textContent = ' Stok Akun';
     var acctCountBadge = document.createElement('span');
     acctCountBadge.style.cssText = 'font-size:.62rem;font-weight:700;background:rgba(52,211,153,.12);color:var(--em);border:1px solid rgba(52,211,153,.2);border-radius:20px;padding:.1rem .55rem';
     acctCountBadge.textContent = 'Memuat...';
@@ -2433,7 +2920,7 @@ function updateContentFields(container, pi, vi, ct, v) {
           body: JSON.stringify({ accounts: txt }),
         });
         const d = await r.json();
-        if (d.ok) { addArea.value = ''; await refreshAcctList(); toast('✅ ' + d.added + ' akun ditambahkan. Total: ' + d.total, 'ok'); }
+        if (d.ok) { addArea.value = ''; await refreshAcctList(); toast('OK ' + d.added + ' akun ditambahkan. Total: ' + d.total, 'ok'); }
         else toast(d.message || 'Gagal.', 'err');
       } catch(e) { toast('Error: ' + e.message, 'err'); }
       addBtn.disabled = false; addBtn.textContent = '+ Tambah Akun';
@@ -2464,7 +2951,7 @@ function updateContentFields(container, pi, vi, ct, v) {
 
     var acctNote = document.createElement('div');
     acctNote.style.cssText = 'font-size:.58rem;color:var(--t3);margin-top:.45rem;line-height:1.5;padding:.35rem .5rem;background:rgba(255,255,255,.03);border-radius:5px';
-    acctNote.innerHTML = '💡 <b>Format bebas</b> — satu akun per baris. Contoh: <code>user|pass</code> atau <code>email:pass</code> atau teks apapun.<br>Setiap pembeli mendapat 1 akun dari atas stok. Akun terkirim otomatis dihapus dari stok.<br>⚠️ <b>Stok = 0 (Habis)</b> tetap bisa dibeli kecuali kamu atur stok -1 (unlimited). Pastikan isi stok sebelum produk aktif.';
+    acctNote.innerHTML = ' <b>Format bebas</b> — satu akun per baris. Contoh: <code>user|pass</code> atau <code>email:pass</code> atau teks apapun.<br>Setiap pembeli mendapat 1 akun dari atas stok. Akun terkirim otomatis dihapus dari stok.<br>!️ <b>Stok = 0 (Habis)</b> tetap bisa dibeli kecuali kamu atur stok -1 (unlimited). Pastikan isi stok sebelum produk aktif.';
     acctBox.appendChild(acctNote);
 
     g1.appendChild(acctBox); container.appendChild(g1);
@@ -2553,7 +3040,7 @@ function updateContentFields(container, pi, vi, ct, v) {
 
       var delL = document.createElement('button'); delL.className='del-btn';
       delL.style.cssText = 'flex-shrink:0;padding:.2rem .45rem;font-size:.6rem';
-      delL.textContent = '✕';
+      delL.textContent = '×';
       delL.onclick = function(){
         productsData[pi].variants[vi].links.splice(li, 1);
         renderLinks();
@@ -2638,7 +3125,7 @@ function renderCategories() {
     inp.style.cssText = 'flex:1;background:transparent;border:none;font-weight:600;padding:0';
     inp.addEventListener('input', function(){ if (typeof categoriesData[ci] === 'object') categoriesData[ci].name = this.value; else categoriesData[ci] = this.value; });
 
-    var del = document.createElement('button'); del.className = 'del-btn'; del.textContent = '✕';
+    var del = document.createElement('button'); del.className = 'del-btn'; del.textContent = '×';
     del.onclick = function(){ categoriesData.splice(ci, 1); renderCategories(); };
 
     row.appendChild(dh); row.appendChild(badge); row.appendChild(inp); row.appendChild(del);
@@ -2776,34 +3263,150 @@ async function saveCategories() {
 }
 
 // ── ADD PRODUCT MODAL ───────────────────────────────
-var _apmdType = 'panel';
+var _apmdType     = 'panel';
+var _apmdDelivery = 'auto';
+var _apmdStock    = -1;
 
-var TYPE_HINTS = {
-  panel: '🖥️ <b>Panel Hosting:</b> Sistem otomatis buat server Pterodactyl. Pastikan <b>Template Panel</b> sudah diisi. Setiap varian = satu paket (1GB, 2GB, dll) dengan pilihan durasi & harga per durasi.',
-  digital: '🔑 <b>Konten Digital:</b> Bisa berupa akun, kode lisensi, teks apapun, atau file gambar/video/audio. Isi konten langsung di field varian — dikirim otomatis ke pembeli setelah bayar.',
-  download: '📦 <b>File Download:</b> Isi URL file di varian (Google Drive, Mega, CDN, dll). Setelah bayar, pembeli dapat link download langsung. Pastikan link bisa diakses publik.',
-  link: '🔗 <b>Link / Redirect:</b> Pembeli diarahkan ke URL yang kamu isi setelah bayar. Cocok untuk Lynk.id, Saweria, atau tautan khusus member.',
-  sewabot: '🤖 <b>Sewa Bot WA:</b> Pembeli isi link grup WA saat checkout. Kamu pasang bot secara manual. Varian berisi durasi sewa (hari) & harga.'
-};
-
-var TYPE_NAME_PRESETS = {
-  panel:   ['Panel Hosting 1GB', 'Panel Hosting 2GB', 'Panel Hosting 4GB', 'VPS Starter', 'Panel Gaming'],
-  digital: ['Netflix Premium 1 Bulan', 'Spotify Premium', 'Disney+ 1 Bulan', 'Canva Pro', 'ChatGPT Plus', 'Office 365', 'NordVPN'],
-  download: ['Preset LUT Cinematic', 'Template PowerPoint', 'Source Code Web', 'Plugin Photoshop', 'Aplikasi Mod APK'],
-  link:    ['Akses Member Area', 'Link Private Channel', 'Link Download Privat'],
-  sewabot: ['Sewa Bot WhatsApp 7 Hari', 'Sewa Bot WA 1 Bulan', 'Bot Auto-Reply WA']
-};
-
-var TYPE_VAR_HINTS = {
-  panel:    { label: 'Plan Key (misal: 1gb, 2gb)', hint: 'Isi dengan ID plan yang ada di Template Panel. Bisa kosong, tambah varian dari kartu produk.', ph: '1gb' },
-  digital:  { label: 'Konten / Data Akun', hint: 'Tulis akun/kode yang dikirim ke pembeli. Bisa username:password, kode lisensi, dll.', ph: 'Email: contoh@gmail.com\nPassword: rahasia123\nCatatan: jangan share ke orang lain' },
-  download: { label: 'URL File Download', hint: 'URL langsung ke file. Harus bisa diakses publik tanpa login. Rekomendasi: Google Drive (setting anyone can view), Mega, atau CDN.', ph: 'https://drive.google.com/uc?id=...' },
-  link:     { label: 'URL Tujuan (redirect)', hint: 'Pembeli akan diarahkan ke URL ini setelah pembayaran sukses.', ph: 'https://lynk.id/produk-privat-kamu' },
-  sewabot:  { label: 'Durasi (hari)', hint: 'Isi jumlah hari sewa. Harga diisi di field Harga. Admin pasang bot secara manual.', ph: '30' }
+// ─── Type configuration ────────────────────────────────────────────────────────
+var PTYPE_CONFIG = {
+  panel: {
+    info: '<b>Panel Hosting Pterodactyl.</b> Sistem otomatis buat server & kirim kredensial ke pembeli. Setiap varian = satu paket RAM (1GB, 2GB, dll) dengan pilihan durasi & harga per durasi. Pastikan <b>Template Panel</b> sudah diisi.',
+    infoClass: '',
+    cats: ['Panel', 'Hosting', 'VPS'],
+    names: ['Panel Hosting Legal', 'Panel Gaming Murah', 'Panel Bot WA', 'VPS Pterodactyl'],
+    varNames: ['1GB', '2GB', '4GB', '8GB', '16GB', 'Unlimited'],
+    prices: [5000, 6000, 8000, 12000, 20000, 40000],
+    descPresets: ['Server privat, anti lemot, garansi 15 hari', 'Full akses panel, support 24 jam', 'Script anti-maling, server stabil, garansi replace'],
+    contentLabel: null, contentHint: null, contentPh: null,
+    showDelivery: false, showDuration: false, showContent: false,
+  },
+  streaming: {
+    info: '<b>Akun Streaming / Hiburan.</b> Kirim akun (email & password) otomatis ke pembeli setelah bayar. Cocok untuk Netflix, Spotify, Disney+, Vidio, YouTube Premium, dll.',
+    infoClass: 'sky',
+    cats: ['Streaming', 'Hiburan', 'Akun Premium'],
+    names: ['Netflix Premium', 'Spotify Premium', 'Disney+ Hotstar', 'YouTube Premium', 'Vidio Premier', 'Apple TV+', 'Crunchyroll'],
+    varNames: ['1 Bulan', '3 Bulan', '6 Bulan', '1 Tahun'],
+    prices: [15000, 25000, 45000, 65000, 80000, 150000],
+    descPresets: ['Garansi full 30 hari, akun private', 'Sharing akun, support ganti jika bermasalah', 'Akun pribadi, tidak dibagi, garansi penuh'],
+    contentLabel: 'Data Akun (Email & Password)',
+    contentHint: 'Tulis persis seperti yang dikirim ke pembeli. Isi ini otomatis dikirim setelah bayar.',
+    contentPh: 'Email: contoh@gmail.com\nPassword: rahasia123\nProfil: Slot 2',
+    showDelivery: true, showDuration: false, showContent: true,
+  },
+  software: {
+    info: '<b>Software, Lisensi & Aktivasi.</b> Kirim kode lisensi, serial key, atau link aktivasi. Cocok untuk Canva Pro, Office 365, ChatGPT Plus, antivirus, plugin, dll.',
+    infoClass: 'pur',
+    cats: ['Software', 'Lisensi', 'Tools & Produktivitas'],
+    names: ['Canva Pro', 'ChatGPT Plus', 'Microsoft 365', 'Adobe CC', 'NordVPN', 'Grammarly Premium', 'Figma Pro'],
+    varNames: ['1 Bulan', '3 Bulan', '1 Tahun', 'Lifetime'],
+    prices: [10000, 20000, 25000, 50000, 75000, 150000],
+    descPresets: ['Akses full fitur premium, lisensi resmi', 'Key aktivasi langsung pakai, garansi aktif', 'Akun original, bisa dipakai di semua perangkat'],
+    contentLabel: 'Kode Lisensi / Key Aktivasi',
+    contentHint: 'Kode yang dikirim ke pembeli. Satu kode per varian.',
+    contentPh: 'XXXXX-XXXXX-XXXXX-XXXXX\natau link aktivasi: https://...',
+    showDelivery: true, showDuration: false, showContent: true,
+  },
+  digital: {
+    info: '<b>Konten Digital Umum.</b> Teks, kode, data akun, atau apapun yang dikirim sebagai teks ke pembeli setelah bayar. Paling fleksibel — cocok untuk akun game, teks rahasia, dll.',
+    infoClass: '',
+    cats: ['Digital', 'Akun', 'Konten'],
+    names: ['Akun FF / Mobile Legend', 'Akun Gmail Aged', 'Akun TikTok Starter', 'Cookies Premium'],
+    varNames: ['Paket Starter', 'Paket Basic', 'Paket Premium', 'Paket VIP'],
+    prices: [5000, 10000, 15000, 25000, 50000],
+    descPresets: ['Kirim otomatis setelah bayar, garansi valid', 'Akun ready stok, langsung aktif', 'Full akses, tidak ada batasan penggunaan'],
+    contentLabel: 'Konten (dikirim ke pembeli)',
+    contentHint: 'Tulis persis seperti yang dikirim ke pembeli setelah bayar.',
+    contentPh: 'Username: ...\nPassword: ...\nCatatan: ...',
+    showDelivery: true, showDuration: false, showContent: true,
+  },
+  voucher: {
+    info: '<b>Voucher & Gift Card.</b> Kirim kode voucher, kode top-up, atau kode redeem ke pembeli. Cocok untuk pulsa, top-up game, gift card Google Play / App Store, dll.',
+    infoClass: 'yel',
+    cats: ['Voucher', 'Top-Up', 'Gift Card'],
+    names: ['Voucher Google Play', 'Gift Card App Store', 'Top-Up Free Fire', 'Top-Up Mobile Legends', 'Pulsa All Operator'],
+    varNames: ['Rp 10.000', 'Rp 25.000', 'Rp 50.000', 'Rp 100.000'],
+    prices: [10500, 25500, 51000, 102000, 153000],
+    descPresets: ['Kode dikirim otomatis, berlaku segera', 'Pengiriman instan setelah bayar, 100% valid', 'Bisa dipakai di semua region, garansi berlaku'],
+    contentLabel: 'Kode Voucher',
+    contentHint: 'Kode yang dikirim ke pembeli setelah bayar.',
+    contentPh: 'XXXXX-XXXXX-XXXXX',
+    showDelivery: true, showDuration: false, showContent: true,
+  },
+  download: {
+    info: '<b>File Download.</b> Pembeli dapat link download langsung setelah bayar. Isi URL file di varian. Pastikan link bisa diakses publik (Google Drive, MEGA, CDN, dll).',
+    infoClass: '',
+    cats: ['Download', 'Template', 'Preset & Plugin'],
+    names: ['Preset LUT Cinematic', 'Template Canva Premium', 'Source Code Web Store', 'Plugin Photoshop Bundle', 'E-Book Panduan'],
+    varNames: ['Paket Lite', 'Paket Full', 'Paket Pro'],
+    prices: [5000, 10000, 15000, 25000, 35000, 50000],
+    descPresets: ['Link download langsung, akses selamanya', 'File termasuk panduan penggunaan, update gratis', 'High quality, kompatibel semua versi'],
+    contentLabel: 'URL File Download',
+    contentHint: 'URL langsung ke file. Harus bisa diakses publik tanpa login. Gunakan Google Drive "anyone with link" atau MEGA.',
+    contentPh: 'https://drive.google.com/uc?id=...',
+    showDelivery: true, showDuration: false, showContent: true,
+  },
+  jasa: {
+    info: '<b>Jasa / Service Manual.</b> Admin kerjakan secara manual setelah pembeli bayar & konfirmasi via WA/Telegram. Cocok untuk joki game, setup server, edit video, desain, dll.',
+    infoClass: 'pur',
+    cats: ['Jasa', 'Service', 'Freelance'],
+    names: ['Joki Rank ML / FF', 'Setup Bot WA', 'Edit Video Reels', 'Desain Logo', 'Joki Tugas / Kuis', 'Setup VPS / Panel'],
+    varNames: ['Paket Basic', 'Paket Standard', 'Paket Premium', 'Custom Order'],
+    prices: [10000, 25000, 50000, 100000, 150000, 200000],
+    descPresets: ['Pengerjaan cepat, hasil terjamin, revisi gratis', 'Proses via WA, estimasi selesai 1×24 jam', 'Dikerjakan profesional, garansi kepuasan'],
+    contentLabel: null, contentHint: null, contentPh: null,
+    showDelivery: false, showDuration: true, showContent: false,
+  },
+  sewabot: {
+    info: '<b>Sewa Bot WhatsApp.</b> Pembeli isi link grup WA saat checkout. Admin pasang bot secara manual. Varian = pilihan durasi sewa.',
+    infoClass: '',
+    cats: ['Bot WA', 'Sewa Bot', 'Otomasi'],
+    names: ['Sewa Bot WA Auto-Reply', 'Bot WA Anti-Delete', 'Bot WA Multi-Fitur'],
+    varNames: ['7 Hari', '14 Hari', '30 Hari', '3 Bulan'],
+    prices: [10000, 15000, 25000, 60000],
+    descPresets: ['Bot stabil 24 jam, fitur lengkap, setup cepat', 'Anti banned, update rutin, support aktif', 'Pasang mudah, banyak fitur, tidak perlu coding'],
+    contentLabel: null, contentHint: null, contentPh: null,
+    showDelivery: false, showDuration: true, showContent: false,
+  },
+  link: {
+    info: '<b>Link / Redirect.</b> Pembeli diarahkan ke URL tertentu setelah bayar. Cocok untuk Lynk.id, Saweria, private Telegram channel, member area, dll.',
+    infoClass: '',
+    cats: ['Akses', 'Member', 'Private Link'],
+    names: ['Akses Member Area', 'Channel Telegram Premium', 'Link Download Privat', 'Group VIP WhatsApp'],
+    varNames: ['Akses 7 Hari', 'Akses 1 Bulan', 'Akses Permanen'],
+    prices: [5000, 15000, 25000, 50000],
+    descPresets: ['Akses langsung setelah bayar, link eksklusif', 'Konten premium, update rutin, akses selamanya', 'Private & eksklusif, hanya untuk member'],
+    contentLabel: 'URL Tujuan (redirect)',
+    contentHint: 'Pembeli diarahkan ke URL ini setelah pembayaran sukses.',
+    contentPh: 'https://t.me/+xxxxx\nhttps://lynk.id/...',
+    showDelivery: true, showDuration: false, showContent: true,
+  },
+  course: {
+    info: '<b>Kursus Online / E-Book.</b> Kirim link materi, PDF, atau akses platform kursus ke pembeli. Cocok untuk tutorial, panduan, e-book, modul belajar, dll.',
+    infoClass: 'sky',
+    cats: ['Kursus', 'E-Book', 'Edukasi'],
+    names: ['Kursus Desain Grafis', 'E-Book Bisnis Online', 'Tutorial Edit Video', 'Panduan Programming', 'Kursus Marketing Digital'],
+    varNames: ['Akses Selamanya', 'Paket Basic', 'Paket Lengkap', 'Paket Bundle'],
+    prices: [15000, 25000, 50000, 75000, 100000],
+    descPresets: ['Materi lengkap, belajar santai sesuai jadwal sendiri', 'Update materi gratis, akses selamanya', 'Cocok untuk pemula, materi praktis langsung bisa diterapkan'],
+    contentLabel: 'Link Materi / Akses',
+    contentHint: 'Link Google Drive, Notion, platform kursus, atau PDF yang dikirim ke pembeli setelah bayar.',
+    contentPh: 'https://drive.google.com/drive/folders/...\natau https://bit.ly/materi-kursus',
+    showDelivery: true, showDuration: false, showContent: true,
+  },
+  topup: {
+    info: '<b>Top-Up Game.</b> Kirim item in-game (diamond, UC, robux, dll) langsung ke akun pembeli. Admin beli & transfer item secara manual, atau pakai reseller API.',
+    infoClass: 'yel',
+    cats: ['Game', 'Top-Up', 'In-Game Item'],
+    names: ['Diamond Mobile Legends', 'UC PUBG Mobile', 'Top-Up Free Fire', 'Robux Roblox', 'VP Valorant', 'Gold COD Mobile'],
+    varNames: ['86 Diamond', '172 Diamond', '257 Diamond', '570 Diamond', '1144 Diamond'],
+    prices: [15000, 28000, 42000, 90000, 175000],
+    descPresets: ['Pengiriman cepat 5-30 menit, aman & terpercaya', 'Langsung masuk ke akun, no login no scan', 'Proses manual by admin, konfirmasi via WA'],
+    contentLabel: null, contentHint: null, contentPh: null,
+    showDelivery: false, showDuration: true, showContent: false,
+  },
 };
 
 function openAddProductModal() {
-  // Populate category datalist
   var dl = document.getElementById('apmdCatList');
   if (dl) {
     dl.innerHTML = '';
@@ -2811,155 +3414,235 @@ function openAddProductModal() {
       var o = document.createElement('option'); o.value = c.name || c; dl.appendChild(o);
     });
   }
-  // Default category
-  var firstCat = (window._categoriesData && window._categoriesData.length)
-    ? (window._categoriesData[0].name || window._categoriesData[0]) : '';
-  var catInp = document.getElementById('apmdCat');
-  if (catInp && !catInp.value) catInp.value = firstCat;
-
-  // Reset type to panel
-  selectProdType(document.querySelector('.type-card[data-type="panel"]'), 'panel');
-
-  // Reset fields
-  ['apmdName','apmdDesc','apmdThumb','apmdVarName','apmdVarPrice','apmdVarContent'].forEach(function(id){
-    var el = document.getElementById(id);
-    if (el) { if (el.tagName === 'TEXTAREA') el.value = ''; else el.value = ''; }
+  ['apmdName','apmdDesc','apmdThumb','apmdVarName','apmdVarPrice','apmdVarContent','apmdStockInput','apmdDuration'].forEach(function(id){
+    var el = document.getElementById(id); if (el) el.value = '';
   });
+  document.getElementById('apmdCat').value = '';
   document.getElementById('apmdIsNew').checked   = true;
   document.getElementById('apmdActive').checked  = true;
   document.getElementById('apmdScrollTo').checked= true;
 
-  var bg=document.getElementById('apmdBg'); bg.style.display='flex'; setTimeout(function(){ bg.classList.add('on'); },10);
-  setTimeout(function(){ var n = document.getElementById('apmdName'); if(n) n.focus(); }, 200);
+  _apmdStock = -1;
+  document.querySelectorAll('.stk').forEach(function(b){ b.classList.remove('sel'); });
+  var ulStk = document.querySelector('.stk[data-stk="-1"]');
+  if (ulStk) ulStk.classList.add('sel');
+  var si = document.getElementById('apmdStockInput');
+  if (si) si.style.display = 'none';
+
+  _apmdDelivery = 'auto';
+  document.querySelectorAll('.dlv').forEach(function(d){ d.classList.remove('sel'); });
+  var autoDlv = document.querySelector('.dlv[data-dlv="auto"]');
+  if (autoDlv) autoDlv.classList.add('sel');
+
+  _apmdType = 'panel';
+  selectProdType(document.querySelector('.ptype[data-type="panel"]'), 'panel');
+
+  var bg = document.getElementById('apmdBg');
+  bg.style.display = 'flex';
+  setTimeout(function(){ bg.classList.add('on'); }, 10);
+  setTimeout(function(){ var n = document.getElementById('apmdName'); if(n) n.focus(); }, 220);
 }
 
 function closeAddProductModal() {
-  var bg=document.getElementById('apmdBg'); bg.classList.remove('on'); setTimeout(function(){ bg.style.display='none'; },220);
-  // Remove injected template dropdown so it gets rebuilt fresh on next open
-  var tplRow = document.getElementById('apmdTplSel');
-  if (tplRow && tplRow.closest && tplRow.closest('#apmdVarSection')) {
-    var row = tplRow.parentElement;
-    if (row) row.remove();
-  }
+  var bg = document.getElementById('apmdBg');
+  bg.classList.remove('on');
+  setTimeout(function(){ bg.style.display = 'none'; }, 230);
 }
 
 function selectProdType(card, type) {
   _apmdType = type;
-  document.querySelectorAll('.type-card').forEach(function(c){ c.classList.remove('selected'); });
-  if (card) card.classList.add('selected');
+  document.querySelectorAll('.ptype').forEach(function(c){ c.classList.remove('sel'); });
+  if (card) card.classList.add('sel');
 
-  // Update hint
-  var hint = document.getElementById('apmdTypeHint');
-  if (hint) hint.innerHTML = TYPE_HINTS[type] || '';
+  var cfg = PTYPE_CONFIG[type] || PTYPE_CONFIG.digital;
 
-  // Update name presets
-  var presetsWrap = document.getElementById('apmdNamePresets');
-  if (presetsWrap) {
-    var presets = TYPE_NAME_PRESETS[type] || [];
-    presetsWrap.innerHTML = presets.map(function(p){
-      return '<span class="name-pill" onclick="document.getElementById(\'apmdName\').value=\''+p.replace(/'/g,'')+'\'">' + p + '</span>';
+  var info = document.getElementById('apmdInfo');
+  if (info) {
+    info.innerHTML = cfg.info;
+    info.className = 'apmd-info' + (cfg.infoClass ? ' ' + cfg.infoClass : '');
+  }
+
+  var catChips = document.getElementById('apmdCatChips');
+  if (catChips) {
+    catChips.innerHTML = cfg.cats.map(function(c){
+      return '<span class="chip" onclick="fillField(\'apmdCat\',\''+c+'\')">'+c+'</span>';
     }).join('');
   }
 
-  // Update variant hint
-  var vh = TYPE_VAR_HINTS[type] || TYPE_VAR_HINTS.digital;
-  var contentLabel = document.getElementById('apmdVarContentLabel');
-  var contentHint  = document.getElementById('apmdVarContentHint');
-  var contentArea  = document.getElementById('apmdVarContent');
-  if (contentLabel) contentLabel.textContent = vh.label;
-  if (contentHint)  contentHint.textContent  = vh.hint;
-  if (contentArea)  contentArea.placeholder  = vh.ph;
-
-  // For panel/sewabot: content field is not applicable — replace with note
-  var varSec = document.getElementById('apmdVarSection');
-  var contentWrap = document.getElementById('apmdVarContentWrap');
-  if (type === 'panel') {
-    if (contentWrap) contentWrap.style.display = 'none';
-    var varHint = document.getElementById('apmdVariantHint');
-    if (varHint) varHint.innerHTML = 'Untuk Panel, varian = paket spesifikasi (1GB, 2GB, dll). Pilih template dari dropdown untuk mengisi plan key otomatis.';
-    // Inject template dropdown if not already injected
-    var apmdVarSec = document.getElementById('apmdVarSection');
-    if (apmdVarSec && !document.getElementById('apmdTplSel')) {
-      var tplRow = document.createElement('div');
-      tplRow.style.cssText = 'display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem;padding:.5rem .6rem;background:rgba(var(--em-rgb),.05);border:1px solid rgba(var(--em-rgb),.15);border-radius:8px';
-      tplRow.innerHTML = '<span style="font-size:.63rem;color:var(--t3);white-space:nowrap;font-weight:700">📐 Dari Template:</span>'
-        + '<select id="apmdTplSel" class="f-inp" style="flex:1;font-size:.68rem"><option value="">— Pilih template —</option></select>'
-        + '<button type="button" onclick="applyPanelTemplate()" style="padding:.35rem .7rem;font-size:.65rem;font-weight:700;background:rgba(var(--em-rgb),.12);color:var(--em);border:1px solid rgba(var(--em-rgb),.3);border-radius:5px;cursor:pointer;font-family:var(--font);white-space:nowrap">Terapkan</button>';
-      apmdVarSec.insertBefore(tplRow, apmdVarSec.firstChild);
-      // Populate with saved templates
-      var sel = document.getElementById('apmdTplSel');
-      var templates = window._panelTemplatesCache || tplData || [];
-      templates.forEach(function(t) {
-        if (!t || !t.id) return;
-        var o = document.createElement('option');
-        o.value = t.id;
-        o.textContent = (t.name || t.id) + ' (' + (t.ram||0) + 'MB RAM / ' + (t.disk||0) + 'MB Disk / ' + (t.cpu||0) + '% CPU)';
-        sel.appendChild(o);
-      });
-    }
-  } else if (type === 'sewabot') {
-    if (contentWrap) contentWrap.style.display = 'none';
-    var varHint2 = document.getElementById('apmdVariantHint');
-    if (varHint2) varHint2.innerHTML = 'Untuk Sewa Bot, varian = pilihan durasi. Nama varian biasanya <b>"7 Hari"</b>, <b>"14 Hari"</b>, <b>"30 Hari"</b>. Isi harga di field Harga. Tambah varian lain setelah produk dibuat.';
-  } else {
-    if (contentWrap) contentWrap.style.display = '';
-    var varHint3 = document.getElementById('apmdVariantHint');
-    if (varHint3) varHint3.innerHTML = 'Setiap produk bisa punya banyak varian (misal: 1 Bulan, 3 Bulan, 1 Tahun). Isi varian pertama di sini, atau biarkan kosong lalu tambah varian di kartu produk setelah tersimpan.';
+  var nameChips = document.getElementById('apmdNameChips');
+  if (nameChips) {
+    nameChips.innerHTML = cfg.names.map(function(n){
+      return '<span class="chip" onclick="fillField(\'apmdName\',\''+n.replace(/\'/g,'')+'\')">' + n + '</span>';
+    }).join('');
   }
+
+  var descChips = document.getElementById('apmdDescChips');
+  if (descChips && cfg.descPresets) {
+    descChips.innerHTML = cfg.descPresets.map(function(d){
+      return '<span class="chip" onclick="fillField(\'apmdDesc\',\''+d.replace(/\'/g,'').replace(/"/g,'')+'\')">' + d + '</span>';
+    }).join('');
+  } else if (descChips) {
+    descChips.innerHTML = '';
+  }
+
+  var varNameChips = document.getElementById('apmdVarNameChips');
+  if (varNameChips) {
+    varNameChips.innerHTML = cfg.varNames.map(function(n){
+      return '<span class="chip sky-chip" onclick="fillField(\'apmdVarName\',\''+n.replace(/\'/g,'')+'\')">' + n + '</span>';
+    }).join('');
+  }
+
+  var priceQuick = document.getElementById('apmdPriceQuick');
+  if (priceQuick) {
+    var priceList = cfg.prices.length ? cfg.prices : [5000,10000,15000,25000,50000,100000];
+    priceQuick.innerHTML = priceList.map(function(p){
+      return '<button class="pq" type="button" onclick="fillField(\'apmdVarPrice\','+p+')">'+idr(p)+'</button>';
+    }).join('');
+  }
+
+  var dlvSec = document.getElementById('apmdDeliverySection');
+  if (dlvSec) dlvSec.style.display = cfg.showDelivery ? '' : 'none';
+
+  var cwrap = document.getElementById('apmdVarContentWrap');
+  if (cwrap) {
+    if (cfg.showContent && cfg.contentLabel) {
+      cwrap.style.display = '';
+      var lbl = document.getElementById('apmdVarContentLabel');
+      var hint = document.getElementById('apmdVarContentHint');
+      var area = document.getElementById('apmdVarContent');
+      if (lbl)  lbl.textContent  = cfg.contentLabel;
+      if (hint) hint.textContent = cfg.contentHint;
+      if (area) area.placeholder = cfg.contentPh;
+    } else {
+      cwrap.style.display = 'none';
+    }
+  }
+
+  var durWrap = document.getElementById('apmdDurationWrap');
+  if (durWrap) durWrap.style.display = cfg.showDuration ? '' : 'none';
+
+  var tplRow = document.getElementById('apmdTplRow');
+  if (tplRow) {
+    if (type === 'panel') {
+      tplRow.style.display = '';
+      var sel = document.getElementById('apmdTplSel');
+      if (sel && sel.options.length < 2) {
+        var templates = window._panelTemplatesCache || window.tplData || [];
+        templates.forEach(function(t) {
+          if (!t || !t.id) return;
+          var o = document.createElement('option');
+          o.value = t.id;
+          o.textContent = (t.name || t.id) + ' — RAM ' + (t.ram||0) + 'MB / Disk ' + (t.disk||0) + 'MB / CPU ' + (t.cpu||0) + '%';
+          sel.appendChild(o);
+        });
+      }
+    } else {
+      tplRow.style.display = 'none';
+    }
+  }
+}
+
+function previewThumb(url) {
+  var box = document.getElementById('apmdThumbPreview');
+  if (!box) return;
+  var clean = (url || '').trim();
+  if (clean && /^https?:\/\//i.test(clean)) {
+    box.innerHTML = '<img src="'+clean+'" style="width:100%;height:100%;object-fit:cover;border-radius:8px" onerror="this.parentElement.innerHTML=\'<svg viewBox=\\\"0 0 24 24\\\" fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-width=\\\"1.5\\\" width=\\\"18\\\" height=\\\"18\\\" style=\\\"opacity:.25\\\"><rect x=\\\"3\\\" y=\\\"3\\\" width=\\\"18\\\" height=\\\"18\\\" rx=\\\"2\\\"/><circle cx=\\\"8.5\\\" cy=\\\"8.5\\\" r=\\\"1.5\\\"/><polyline points=\\\"21 15 16 10 5 21\\\"/></svg>\'">';
+  } else {
+    box.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18" style="opacity:.25"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
+  }
+}
+
+function adjPrice(delta) {
+  var el = document.getElementById('apmdVarPrice');
+  if (!el) return;
+  var v = parseInt(el.value) || 0;
+  el.value = Math.max(0, v + delta);
+}
+
+function selectDelivery(el, mode) {
+  _apmdDelivery = mode;
+  document.querySelectorAll('.dlv').forEach(function(d){ d.classList.remove('sel'); });
+  if (el) el.classList.add('sel');
+}
+
+function selectStock(btn, val) {
+  _apmdStock = val === 'custom' ? 0 : val;
+  document.querySelectorAll('.stk').forEach(function(b){ b.classList.remove('sel'); });
+  if (btn) btn.classList.add('sel');
+  var si = document.getElementById('apmdStockInput');
+  if (si) si.style.display = (val === 'custom') ? '' : 'none';
+  if (val === 'custom' && si) si.focus();
+}
+
+function setDuration(days) {
+  var el = document.getElementById('apmdDuration');
+  if (el) el.value = days;
+}
+
+function fillField(id, val) {
+  var el = document.getElementById(id);
+  if (el) { el.value = val; el.dispatchEvent(new Event('input')); }
 }
 
 function applyPanelTemplate() {
   var sel = document.getElementById('apmdTplSel');
   if (!sel || !sel.value) { toast('Pilih template terlebih dahulu', 'warn'); return; }
-  var templates = window._panelTemplatesCache || tplData || [];
+  var templates = window._panelTemplatesCache || window.tplData || [];
   var t = templates.find(function(x){ return x.id === sel.value; });
   if (!t) { toast('Template tidak ditemukan', 'err'); return; }
-  // Fill variant name with template id
   var nameInp = document.getElementById('apmdVarName');
   if (nameInp) nameInp.value = t.id;
-  // Fill product name hint
   var prodName = document.getElementById('apmdName');
   if (prodName && !prodName.value) prodName.value = 'Panel Hosting ' + (t.name || t.id).toUpperCase();
-  toast('Template "' + (t.name||t.id) + '" diterapkan: RAM ' + t.ram + 'MB / Disk ' + t.disk + 'MB / CPU ' + t.cpu + '%', 'ok', 3500);
+  toast('Template "' + (t.name||t.id) + '" diterapkan', 'ok', 2500);
 }
 
 function submitAddProduct() {
   var name = (document.getElementById('apmdName').value || '').trim();
-  if (!name) {
-    document.getElementById('apmdName').focus();
-    toast('Nama produk wajib diisi!', 'err');
-    return;
-  }
-  var type      = _apmdType || 'digital';
-  var cat       = (document.getElementById('apmdCat').value    || '').trim();
-  var thumb     = (document.getElementById('apmdThumb').value  || '').trim();
-  var desc      = (document.getElementById('apmdDesc').value   || '').trim();
-  var varName   = (document.getElementById('apmdVarName').value|| '').trim();
-  var varPrice  = parseInt(document.getElementById('apmdVarPrice').value) || 0;
-  var varContent= (document.getElementById('apmdVarContent').value || '').trim();
-  var isNew     = document.getElementById('apmdIsNew').checked;
-  var active    = document.getElementById('apmdActive').checked;
-  var scrollTo  = document.getElementById('apmdScrollTo').checked;
+  if (!name) { document.getElementById('apmdName').focus(); toast('Nama produk wajib diisi!', 'err'); return; }
 
-  // Build variants array
+  var type       = _apmdType || 'digital';
+  var cat        = (document.getElementById('apmdCat').value    || '').trim();
+  var thumb      = (document.getElementById('apmdThumb').value  || '').trim();
+  var desc       = (document.getElementById('apmdDesc').value   || '').trim();
+  var varName    = (document.getElementById('apmdVarName').value|| '').trim();
+  var varPrice   = parseInt(document.getElementById('apmdVarPrice').value) || 0;
+  var varContent = '';
+  var vcEl = document.getElementById('apmdVarContent');
+  if (vcEl) varContent = (vcEl.value || '').trim();
+  var isNew      = document.getElementById('apmdIsNew').checked;
+  var active     = document.getElementById('apmdActive').checked;
+  var scrollTo   = document.getElementById('apmdScrollTo').checked;
+
+  var stock = -1;
+  if (_apmdStock === 0 || _apmdStock === 'custom') {
+    var siEl = document.getElementById('apmdStockInput');
+    stock = siEl ? (parseInt(siEl.value) || 0) : 0;
+  } else {
+    stock = parseInt(_apmdStock) || -1;
+  }
+
   var variants = [];
   if (varName) {
-    var v = { id: 'var-' + Date.now(), name: varName, price: varPrice, description: '', stock: -1 };
+    var v = { id: 'var-' + Date.now(), name: varName, price: varPrice, description: '', stock: stock };
     if (type === 'panel') {
       v.plan = varName; v.daysOptions = [7,14,30]; v.dayPrices = {7:0,14:0,30:0};
-    } else if (type === 'sewabot') {
-      v.days = parseInt(varContent) || 30;
+    } else if (type === 'sewabot' || type === 'jasa' || type === 'topup') {
+      var dEl = document.getElementById('apmdDuration');
+      v.days = dEl ? (parseInt(dEl.value) || 30) : 30;
     } else {
-      // Detect if content looks like a URL
       var isUrl = /^https?:\/\//i.test(varContent);
-      if (type === 'download' || type === 'link') {
-        v.contentType = type === 'link' ? 'link' : 'file';
-        v.contentUrl  = varContent;
+      if (type === 'download') {
+        v.contentType = 'file'; v.contentUrl = varContent;
+      } else if (type === 'link') {
+        v.contentType = 'link'; v.contentUrl = varContent;
       } else {
-        v.contentType  = isUrl ? 'link' : 'text';
+        v.contentType = isUrl ? 'link' : 'text';
         if (isUrl) v.contentUrl = varContent;
         else       v.contentText = varContent;
       }
+      if (_apmdDelivery === 'manual') v.deliveryManual = true;
     }
     variants.push(v);
   }
@@ -2968,17 +3651,14 @@ function submitAddProduct() {
     id: 'prod-' + Date.now() + Math.random().toString(36).slice(2),
     name: name, type: type, category: cat,
     thumbnail: thumb, description: desc,
-    active: active, isNew: isNew,
-    variants: variants
+    active: active, isNew: isNew, variants: variants
   };
 
-  // PREPEND to top so admin sees it immediately
   productsData.unshift(newProd);
   renderProducts();
   closeAddProductModal();
   toast('Produk "' + name + '" berhasil ditambahkan! Ingat klik Simpan.', 'ok', 4000);
 
-  // Scroll to top of product list
   if (scrollTo) {
     setTimeout(function(){
       var ab = document.querySelector('.app-body');
@@ -2993,11 +3673,9 @@ function submitAddProduct() {
   }
 }
 
-// Close modal on background click
 document.getElementById('apmdBg').addEventListener('click', function(e){
   if (e.target === this) closeAddProductModal();
 });
-// Close modal on ESC key
 document.addEventListener('keydown', function(e){
   if (e.key === 'Escape') {
     var bg = document.getElementById('apmdBg');
@@ -3006,10 +3684,10 @@ document.addEventListener('keydown', function(e){
 });
 
 function addProduct() {
-  // Make sure categories are loaded first
   if (!window._categoriesData) window._categoriesData = [];
   openAddProductModal();
 }
+
 
 
 
@@ -3115,7 +3793,7 @@ async function saveSlides() {
   var btn = document.getElementById('slidesSaveBtn');
   btn.disabled = true; btn.textContent = 'Menyimpan...';
   try {
-    var j = await aFetch('POST', '/api/admin/slides', { slides: JSON.stringify(slidesData) });
+    var j = await aFetch('POST', '/api/admin/slides', slidesData);
     btn.disabled = false; btn.textContent = 'Simpan Semua Banner';
     if (j.ok) toast('Banner tersimpan!', 'ok');
     else toast(j.message, 'err');
@@ -3167,8 +3845,117 @@ async function loadSettings() {
         document.getElementById('cfgBgOpacityRange').value = op;
         document.getElementById('bgOpacityPreview').textContent = parseFloat(op).toFixed(2);
       }
+      // ── PHONE & CUSTOM FIELDS
+      if (document.getElementById('cfgPhoneEnabled')) document.getElementById('cfgPhoneEnabled').checked = d.phoneEnabled !== false;
+      if (document.getElementById('cfgPhoneRequired')) document.getElementById('cfgPhoneRequired').checked = !!d.phoneRequired;
+      renderCustomFieldsUI(Array.isArray(d.customFields) ? d.customFields : []);
     }
-  } catch(e) {}
+  } catch(e) { console.error('[loadSettings]', e); }
+  // Muat konfigurasi iklan popup
+  loadAdConfig();
+}
+
+// ── CUSTOM FIELDS MANAGER ──────────────────────────────────────────────────
+var _customFieldsData = [];
+
+function renderCustomFieldsUI(fields) {
+  _customFieldsData = fields.slice();
+  var list = document.getElementById('cfCustomFieldsList');
+  if (!list) return;
+  if (!_customFieldsData.length) {
+    list.innerHTML = '<div style="color:var(--t3);font-size:.7rem;padding:.5rem 0">Belum ada field tambahan. Klik "+ Tambah Field" untuk menambah.</div>';
+    return;
+  }
+  list.innerHTML = _customFieldsData.map(function(f, i) {
+    return '<div class="cf-row" id="cfrow-'+i+'" style="display:flex;align-items:center;gap:.5rem;background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:.5rem .75rem;margin-bottom:.35rem">'
+      + '<div style="flex:1;min-width:0">'
+      + '<div style="font-size:.75rem;font-weight:700;color:var(--t1)">'+esc(f.label)+'</div>'
+      + '<div style="font-size:.62rem;color:var(--t3);margin-top:.1rem">'
+      + 'Tipe: '+f.type+' &nbsp;·&nbsp; Produk: '+(f.forProduct||'all')
+      + ' &nbsp;·&nbsp; <span style="color:'+(f.required?'var(--red)':'var(--em)') + '">' + (f.required?'Wajib':'Opsional') + '</span>'
+      + '</div></div>'
+      + '<button onclick="editCustomField('+i+')" style="font-size:.62rem;padding:.25rem .6rem;background:none;border:1px solid var(--line);border-radius:6px;color:var(--t2);cursor:pointer">️ Edit</button>'
+      + '<button onclick="deleteCustomField('+i+')" style="font-size:.62rem;padding:.25rem .6rem;background:none;border:1px solid rgba(248,113,113,.3);border-radius:6px;color:var(--red);cursor:pointer"></button>'
+      + '</div>';
+  }).join('');
+}
+
+function addCustomField() {
+  openCfModal(null, null);
+}
+
+function editCustomField(i) {
+  openCfModal(_customFieldsData[i], i);
+}
+
+function deleteCustomField(i) {
+  _customFieldsData.splice(i, 1);
+  renderCustomFieldsUI(_customFieldsData);
+  setFormDirty(true);
+}
+
+function openCfModal(field, editIdx) {
+  var isEdit = editIdx !== null && editIdx !== undefined;
+  var f = field || { label:'', type:'text', required:false, placeholder:'', forProduct:'all' };
+  var html = '<div style="position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px)">'
+    + '<div style="background:var(--bg1);border:1px solid var(--line2);border-radius:16px;padding:1.5rem;width:min(400px,92vw);box-shadow:0 24px 64px rgba(0,0,0,.8)">'
+    + '<div style="font-size:.9rem;font-weight:700;margin-bottom:1rem">'+(isEdit?'Edit':'Tambah')+' Custom Field</div>'
+    + '<label style="font-size:.62rem;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.08em">Nama Label *</label>'
+    + '<input id="cfmLabel" class="f-inp" style="margin:.3rem 0 .75rem" value="'+esc(f.label)+'" placeholder="cth: Username Game, Email, Nomor WA">'
+    + '<label style="font-size:.62rem;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.08em">Tipe Input</label>'
+    + '<select id="cfmType" class="f-inp" style="margin:.3rem 0 .75rem">'
+    + ['text','number','email','tel','textarea'].map(function(t){ return '<option value="'+t+'"'+(f.type===t?' selected':'')+'>'+t+'</option>'; }).join('')
+    + '</select>'
+    + '<label style="font-size:.62rem;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.08em">Berlaku untuk Produk</label>'
+    + '<select id="cfmProd" class="f-inp" style="margin:.3rem 0 .75rem">'
+    + [['all','Semua Produk'],['panel','Panel'],['digital','Digital'],['download','Download'],['sewabot','Sewa Bot']].map(function(p){ return '<option value="'+p[0]+'"'+(f.forProduct===p[0]?' selected':'')+'>'+p[1]+'</option>'; }).join('')
+    + '</select>'
+    + '<input id="cfmPlaceholder" class="f-inp" style="margin:.3rem 0 .75rem" value="'+esc(f.placeholder||'')+'" placeholder="Placeholder (opsional)">'
+    + '<label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;margin-bottom:1rem">'
+    + '<input type="checkbox" id="cfmRequired"'+(f.required?' checked':'')+'> <span style="font-size:.75rem">Field ini wajib diisi</span></label>'
+    + '<div style="display:flex;gap:.5rem">'
+    + '<button onclick="saveCfModal('+editIdx+')" style="flex:1;padding:.65rem;background:var(--em);color:#040d09;border:none;border-radius:8px;font-weight:700;font-size:.78rem;cursor:pointer">'+(isEdit?'Simpan':'Tambahkan')+'</button>'
+    + '<button onclick="closeCfModal()" style="padding:.65rem 1rem;background:var(--bg2);border:1px solid var(--line);border-radius:8px;font-size:.78rem;cursor:pointer;color:var(--t2)">Batal</button>'
+    + '</div></div></div>';
+  var overlay = document.createElement('div');
+  overlay.innerHTML = html;
+  document.body.appendChild(overlay.firstElementChild);
+}
+
+function _syncPhoneReq() {
+  var en  = document.getElementById('cfgPhoneEnabled');
+  var req = document.getElementById('cfgPhoneRequired');
+  if (en && req && !en.checked) req.checked = false;
+}
+
+function closeCfModal() {
+  var m = document.querySelector('div[style*="position:fixed"][style*="z-index:99999"]');
+  if (m) m.remove();
+}
+
+function setFormDirty(dirty) {
+  // Stub — dapat dikembangkan untuk tracking perubahan form yang belum disimpan
+}
+
+function saveCfModal(editIdx) {
+  var label = (document.getElementById('cfmLabel').value || '').trim();
+  if (!label) { alert('Nama label wajib diisi.'); return; }
+  var field = {
+    id         : (editIdx !== undefined && editIdx !== null && _customFieldsData[editIdx]) ? _customFieldsData[editIdx].id : ('cf-'+Date.now()),
+    label      : label,
+    type       : document.getElementById('cfmType').value,
+    required   : document.getElementById('cfmRequired').checked,
+    placeholder: (document.getElementById('cfmPlaceholder').value || '').trim(),
+    forProduct : document.getElementById('cfmProd').value,
+  };
+  if (editIdx !== undefined && editIdx !== null) {
+    _customFieldsData[editIdx] = field;
+  } else {
+    _customFieldsData.push(field);
+  }
+  renderCustomFieldsUI(_customFieldsData);
+  document.querySelector('div[style*="position:fixed"][style*="z-index:99999"]').remove();
+  setFormDirty(true);
 }
 
 function updateDepFeePreview() {
@@ -3230,19 +4017,39 @@ async function saveSettings() {
   var bgUrl      = document.getElementById('cfgBgUrl') ? document.getElementById('cfgBgUrl').value.trim() : '';
   var bgType     = document.getElementById('cfgBgType') ? document.getElementById('cfgBgType').value : 'image';
   var bgOpacity  = document.getElementById('cfgBgOpacity') ? (parseFloat(document.getElementById('cfgBgOpacity').value) || 0.15) : 0.15;
+  // ── Phone field settings
+  var phoneEnabled  = document.getElementById('cfgPhoneEnabled') ? document.getElementById('cfgPhoneEnabled').checked : true;
+  var phoneRequired = document.getElementById('cfgPhoneRequired') ? document.getElementById('cfgPhoneRequired').checked : false;
   var j = await aFetch('POST', '/api/admin/settings', {
     storeName: name, wa, expiryMin: expiry, logoUrl, appLogoUrl, instagram, tiktok,
     footerText, primaryColor, announcement, maintenanceMsg: maintMsg,
     maintenanceMode: maint, otpEnabled: otpEn, panelEnabled: panelEn,
     musicUrl, musicEnabled, captchaEnabled,
     depositFeeType, depositFee, depositMin, otpMarkup,
-    bgUrl, bgType, bgOpacity
+    bgUrl, bgType, bgOpacity,
+    phoneEnabled, phoneRequired,
+    customFields: _customFieldsData
   });
   if (j.ok) {
     toast('Pengaturan disimpan!', 'ok');
-    // Apply color/bg changes immediately without page reload
+    setFormDirty(false);
     applyGlobalSettings({ primaryColor, bgUrl, bgType, bgOpacity });
   } else toast(j.message || 'Gagal', 'err');
+}
+
+// ═══════════════════════════════════════════════════
+// COLLAPSIBLE SECTIONS
+// ═══════════════════════════════════════════════════
+function toggleSec(head) {
+  var body = head.nextElementSibling;
+  if (!body || !body.classList.contains('sec-body')) return;
+  var isOpen = body.style.display !== 'none' && body.style.display !== '';
+  // Initialize: if first call and body has no explicit display, treat as open
+  if (body.style.display === '') isOpen = true;
+  body.style.display = isOpen ? 'none' : '';
+  head.classList.toggle('open', !isOpen);
+  var chev = head.querySelector('.sec-chev, svg:last-child');
+  if (chev) chev.style.transform = isOpen ? 'rotate(-90deg)' : '';
 }
 
 async function toggleAudit(head) {
@@ -3270,9 +4077,15 @@ async function toggleAudit(head) {
 // ═══════════════════════════════════════════════════
 // DRAWER
 // ═══════════════════════════════════════════════════
-function openDrawer(title, html) {
-  document.getElementById('drTitle').textContent = title;
+function openDrawer(title, html, opts) {
+  document.getElementById('drTitle').innerHTML = title;
   document.getElementById('drBody').innerHTML = html;
+  var drawer = document.querySelector('.drawer');
+  if (drawer && opts && opts.wide) {
+    drawer.style.width = '560px';
+  } else if (drawer) {
+    drawer.style.width = '';
+  }
   document.getElementById('drawerBg').classList.add('on');
 }
 function closeDrawer() { document.getElementById('drawerBg').classList.remove('on'); }
@@ -3411,38 +4224,30 @@ async function setBan(username, ban) {
 // PRODUCTS SAVE — fix: serialize properly
 // ═══════════════════════════════════════════════════
 // Override aFetch for PUT with JSON body (products needs JSON in 'products' field)
+// ── aFetch override: ensure JSON-array endpoints always send arrays correctly ──
 var _aFetch = aFetch;
 aFetch = function(method, url, data) {
-  // These endpoints need JSON arrays
   var jsonArrayEndpoints = [
     '/api/admin/products',
     '/api/admin/slides',
     '/api/admin/categories',
     '/api/admin/panel-templates',
   ];
-  var needsJson = jsonArrayEndpoints.some(function(ep){ return url === ep || url.startsWith(ep); });
-  if (needsJson && data) {
-    var body;
-    if (Array.isArray(data)) {
-      body = JSON.stringify(data);
-    } else if (data.products) {
-      body = JSON.stringify(typeof data.products === 'string' ? JSON.parse(data.products) : data.products);
-    } else if (data.slides) {
-      body = JSON.stringify(typeof data.slides === 'string' ? JSON.parse(data.slides) : data.slides);
-    } else if (data.categories) {
-      body = JSON.stringify(typeof data.categories === 'string' ? JSON.parse(data.categories) : data.categories);
-    } else {
-      body = JSON.stringify(data);
-    }
+  var needsArray = jsonArrayEndpoints.some(function(ep){ return url === ep || url.startsWith(ep + '?'); });
+  if (needsArray && data) {
+    // Unwrap wrapper objects (e.g. { products: [...] }) → send raw array
+    var arr = Array.isArray(data) ? data
+      : (data.products || data.slides || data.categories || data.templates || data);
     return fetch(url, {
       method: method,
       headers: { 'x-admin-token': TOKEN, 'Content-Type': 'application/json' },
-      body: body,
-    }).then(function(r){ return r.json(); });
+      body: JSON.stringify(arr),
+    }).then(function(r){ return r.json(); }).catch(function(e){
+      toast('Koneksi error: ' + e.message, 'err');
+      return { ok: false, message: e.message };
+    });
   }
-  if (method === 'DELETE') {
-    return fetch(url, { method: 'DELETE', headers: { 'x-admin-token': TOKEN } }).then(function(r){ return r.json(); });
-  }
+  // All other methods (GET, POST, PUT, PATCH, DELETE) handled by base aFetch
   return _aFetch(method, url, data);
 };
 
@@ -3549,7 +4354,7 @@ async function saveTemplates() {
   btn.disabled = true; btn.textContent = '...';
   // Validasi: cek ada template dengan ID kosong
   var emptyIds = tplData.filter(function(t){ return !String(t.id||'').trim(); });
-  if (emptyIds.length) { toast('⚠️ Ada template dengan ID kosong! Isi ID sebelum simpan.', 'err'); btn.disabled=false; btn.textContent='Simpan Semua'; return; }
+  if (emptyIds.length) { toast('!️ Ada template dengan ID kosong! Isi ID sebelum simpan.', 'err'); btn.disabled=false; btn.textContent='Simpan Semua'; return; }
   try {
     var j = await fetch('/api/admin/panel-templates', {
       method: 'POST',
@@ -3557,7 +4362,7 @@ async function saveTemplates() {
       body: JSON.stringify(tplData)
     }).then(function(r){ return r.json(); });
     btn.disabled = false; btn.textContent = 'Simpan Semua';
-    if (j.ok) { toast('Template disimpan! ✓ Data sudah tersimpan.', 'ok'); }
+    if (j.ok) { toast('Template disimpan! v Data sudah tersimpan.', 'ok'); }
     else toast(j.message || 'Gagal menyimpan', 'err');
   } catch(e) { btn.disabled = false; btn.textContent = 'Simpan Semua'; toast('Error: '+e.message, 'err'); }
 }
@@ -4094,6 +4899,7 @@ function handleAdminEvent(d) {
     if (activeTab === 'tabSewabot') setTimeout(loadSewabotOrders, 800);
   } else if (d.type === 'new_order') {
     showLiveNotif('order', 'yel', 'Order Baru Masuk', (d.productName||'') + (d.variantName ? ' — ' + d.variantName : ''));
+    // Jangan reload products jika modal Add Produk sedang terbuka
     if (activeTab === 'tabTrx') setTimeout(loadTrx, 800);
   } else if (d.type === 'new_sewabot') {
     showLiveNotif('sewabot', 'pur', 'Order Sewa Bot Masuk', (d.buyerName||'Pembeli') + ' — ' + (d.days||'?') + ' hari');
@@ -4101,7 +4907,7 @@ function handleAdminEvent(d) {
   } else if (d.type === 'otp_completed') {
     // OTP order selesai — notifikasi real-time ke admin
     var otpLbl = '@' + (d.username||'?') + ' · ' + esc(d.service||'') + (d.country ? ' (' + esc(d.country) + ')' : '') + ' | ' + idr(d.price||0);
-    showLiveNotif('otp', 'sky', '📱 OTP Diterima', otpLbl);
+    showLiveNotif('otp', 'sky', ' OTP Diterima', otpLbl);
     if (activeTab === 'tabUsers') setTimeout(loadUsers, 800);
   }
 }
@@ -4201,6 +5007,60 @@ async function loadWebhookConfig() {
   } catch(e) {}
 }
 
+// ── IKLAN POPUP ─────────────────────────────────────────────────────────
+function updateAdPreview() {
+  var imgUrl = (document.getElementById('adImageUrl') || {}).value || '';
+  var text   = (document.getElementById('adText')     || {}).value || '';
+  var wrap   = document.getElementById('adPreviewWrap');
+  var preImg = document.getElementById('adPreviewImg');
+  var preTxt = document.getElementById('adPreviewText');
+  if (!wrap) return;
+
+  if (!imgUrl && !text) { wrap.style.display = 'none'; return; }
+  wrap.style.display = '';
+
+  if (preImg) {
+    if (imgUrl) { preImg.src = imgUrl; preImg.style.display = 'block'; }
+    else preImg.style.display = 'none';
+  }
+  if (preTxt) {
+    if (text) { preTxt.innerHTML = text.replace(/\n/g, '<br>'); preTxt.style.display = ''; }
+    else preTxt.style.display = 'none';
+  }
+}
+
+async function loadAdConfig() {
+  try {
+    var j = await aFetch('GET', '/api/admin/ad');
+    if (!j || !j.ok) return;
+    var el = function(id) { return document.getElementById(id); };
+    var cb = el('adEnabled');
+    if (cb) { cb.checked = !!j.enabled; }
+    var lbl = el('adStatusLbl');
+    if (lbl) { lbl.textContent = j.enabled ? 'AKTIF' : 'Nonaktif'; lbl.style.color = j.enabled ? 'var(--em)' : 'var(--t3)'; }
+    if (el('adImageUrl')) el('adImageUrl').value = j.imageUrl || '';
+    if (el('adText'))     el('adText').value     = j.text     || '';
+    if (el('adLinkUrl'))  el('adLinkUrl').value  = j.linkUrl  || '';
+    updateAdPreview();
+  } catch(e) { console.warn('[loadAdConfig]', e); }
+}
+
+async function saveAdConfig() {
+  var el = function(id) { return document.getElementById(id); };
+  var payload = {
+    enabled  : !!(el('adEnabled')  || {}).checked,
+    imageUrl : ((el('adImageUrl')  || {}).value  || '').trim(),
+    text     : ((el('adText')      || {}).value  || '').trim(),
+    linkUrl  : ((el('adLinkUrl')   || {}).value  || '').trim(),
+  };
+  if (!payload.imageUrl && !payload.text) {
+    showToast('Masukkan URL gambar atau teks iklan terlebih dahulu.', 'err'); return;
+  }
+  var j = await aFetch('POST', '/api/admin/ad', payload);
+  if (j && j.ok) showToast('✅ Konfigurasi iklan tersimpan.', 'ok');
+  else showToast('Gagal menyimpan iklan.', 'err');
+}
+
 async function saveWebhook() {
   var url     = (document.getElementById('cfgWebhookUrl')     ||{}).value || '';
   var secret  = (document.getElementById('cfgWebhookSecret')  ||{}).value || '';
@@ -4219,6 +5079,285 @@ async function testWebhook() {
   else toast(j.message || 'Gagal', 'err');
 }
 
+// ══════════════════════════════════════════════════════════════
+// RESELLER MANAGEMENT
+// ═══════════════════════════════════════════════════
+
+function closeAllRsDropdowns() {
+  document.querySelectorAll('.rs-dropdown.open').forEach(function(d){ d.classList.remove('open'); });
+}
+function toggleRsDropdown(btn) {
+  var dd = btn.nextElementSibling;
+  var wasOpen = dd.classList.contains('open');
+  closeAllRsDropdowns();
+  if (!wasOpen) dd.classList.add('open');
+}
+// Tutup dropdown saat klik di luar
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.rs-actions')) closeAllRsDropdowns();
+});
+// ══════════════════════════════════════════════════════════════
+var _resellerData = [];
+
+async function loadResellers() {
+  document.getElementById('resellersBody').innerHTML = '<tr><td colspan="7" class="tbl-empty"><span class="ld"><span></span><span></span><span></span></span> Memuat...</td></tr>';
+  try {
+    var j = await aFetch('GET', '/api/admin/resellers');
+    if (!j.ok) {
+      document.getElementById('resellersBody').innerHTML = '<tr><td colspan="7" class="tbl-empty">Error: ' + esc(j.message||'Gagal') + '</td></tr>';
+      return;
+    }
+    _resellerData = j.data || [];
+    // Update stats
+    document.getElementById('rsTotal').textContent    = _resellerData.length;
+    document.getElementById('rsActive').textContent   = _resellerData.filter(function(r){ return r.active; }).length;
+    document.getElementById('rsInactive').textContent = _resellerData.filter(function(r){ return !r.active; }).length;
+    renderResellersTable();
+  } catch(e) {
+    document.getElementById('resellersBody').innerHTML = '<tr><td colspan="7" class="tbl-empty">Koneksi error.</td></tr>';
+  }
+}
+
+function renderResellersTable() {
+  var q    = (document.getElementById('rsSearch').value || '').toLowerCase();
+  var rows = _resellerData.filter(function(r) {
+    if (!q) return true;
+    return r.username.toLowerCase().includes(q);
+  });
+  if (!rows.length) {
+    document.getElementById('resellersBody').innerHTML = '<tr><td colspan="7" class="tbl-empty">Tidak ada data.</td></tr>';
+    return;
+  }
+  document.getElementById('resellersBody').innerHTML = rows.map(function(r) {
+    var statusBadge = r.active
+      ? '<span style="font-size:.6rem;font-weight:700;padding:.15rem .45rem;border-radius:5px;background:rgba(52,211,153,.1);color:var(--em);border:1px solid rgba(52,211,153,.25)">Aktif</span>'
+      : '<span style="font-size:.6rem;font-weight:700;padding:.15rem .45rem;border-radius:5px;background:rgba(248,113,113,.08);color:var(--red);border:1px solid rgba(248,113,113,.2)">Nonaktif</span>';
+    var plansStr = r.allowedPlans && r.allowedPlans.length
+      ? r.allowedPlans.map(function(p){ return p.toUpperCase(); }).join(', ')
+      : '<span style="color:var(--t3)">Semua</span>';
+    return '<tr>'
+      + '<td style="font-weight:700;color:var(--t1)">' + esc(r.username) + '</td>'
+      + '<td>' + statusBadge + '</td>'
+      + '<td style="font-size:.65rem;color:var(--t2)">' + plansStr + '</td>'
+      + '<td style="color:var(--sky)">' + (r.maxServers||10) + '</td>'
+      + '<td style="color:var(--t3);font-size:.65rem">' + fmtDate(r.createdAt) + '</td>'
+      + '<td style="color:var(--t3);font-size:.65rem">' + (r.lastLogin ? fmtDate(r.lastLogin) : '—') + '</td>'
+      + '<td>'
+        + '<div class="rs-actions">'
+          + '<button class="rs-actions-btn" onclick="toggleRsDropdown(this)">'
+          + 'Aksi <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="10" height="10"><polyline points="6 9 12 15 18 9"/></svg>'
+          + '</button>'
+          + '<div class="rs-dropdown">'
+            + '<button class="rs-drop-item" onclick="closeAllRsDropdowns();editReseller(\'' + esc(r.username) + '\')">️ Edit Plan & Kuota</button>'
+            + '<button class="rs-drop-item" onclick="closeAllRsDropdowns();resetResellerPass(\'' + esc(r.username) + '\')"> Reset Password</button>'
+            + '<div class="rs-drop-sep"></div>'
+            + (r.active
+                ? '<button class="rs-drop-item warn" onclick="closeAllRsDropdowns();toggleResellerActive(\'' + esc(r.username) + '\',false)">Nonaktifkan</button>'
+                : '<button class="rs-drop-item success" onclick="closeAllRsDropdowns();toggleResellerActive(\'' + esc(r.username) + '\',true)">▶ Aktifkan</button>')
+            + '<div class="rs-drop-sep"></div>'
+            + '<button class="rs-drop-item danger" onclick="closeAllRsDropdowns();deleteReseller(\'' + esc(r.username) + '\')"> Hapus Akun</button>'
+          + '</div>'
+        + '</div>'
+      + '</td>'
+      + '</tr>';
+  }).join('');
+}
+
+async function createReseller() {
+  var username = (document.getElementById('rsNewUser').value || '').trim().toLowerCase();
+  var password = (document.getElementById('rsNewPass').value || '').trim();
+  var maxSrv   = parseInt(document.getElementById('rsNewMax').value) || 10;
+  var plansRaw = (document.getElementById('rsNewPlans').value || '').trim();
+  var plans    = plansRaw ? plansRaw.split(',').map(function(p){ return p.trim().toLowerCase(); }).filter(Boolean) : [];
+
+  if (!username || username.length < 3 || username.length > 20 || !/^[a-z0-9_]+$/.test(username)) {
+    toast('Username tidak valid (3-20 karakter, huruf kecil/angka/_)', 'warn'); return;
+  }
+  if (!password || password.length < 6) {
+    toast('Password minimal 6 karakter.', 'warn'); return;
+  }
+
+  var btn = document.getElementById('rsCreateBtn');
+  btn.disabled = true; btn.textContent = 'Membuat...';
+  var j = await aFetch('POST', '/api/admin/resellers', { username: username, password: password, maxServers: maxSrv, allowedPlans: plans });
+  btn.disabled = false; btn.textContent = 'Buat Akun Reseller';
+
+  if (j.ok) {
+    toast('Akun reseller "' + username + '" berhasil dibuat.', 'ok');
+    document.getElementById('rsNewUser').value  = '';
+    document.getElementById('rsNewPass').value  = '';
+    document.getElementById('rsNewMax').value   = '10';
+    document.getElementById('rsNewPlans').value = '';
+    loadResellers();
+  } else {
+    toast(j.message || 'Gagal membuat reseller.', 'err');
+  }
+}
+
+async function toggleResellerActive(username, active) {
+  var label = active ? 'aktifkan' : 'nonaktifkan';
+  var ok = await showConfirm({
+    danger  : !active,
+    title   : (active ? 'Aktifkan' : 'Nonaktifkan') + ' Reseller',
+    message : 'Apakah kamu yakin ingin <b>' + label + '</b> akun reseller <b>' + esc(username) + '</b>?',
+    okLabel : active ? 'Aktifkan' : 'Nonaktifkan',
+  });
+  if (!ok) return;
+  var j = await aFetch('PATCH', '/api/admin/resellers/' + encodeURIComponent(username), { active: active });
+  if (j.ok) { toast('Status reseller diperbarui.', 'ok'); loadResellers(); }
+  else toast(j.message || 'Gagal.', 'err');
+}
+
+async function deleteReseller(username) {
+  var ok = await showConfirm({
+    danger  : true,
+    title   : 'Hapus Reseller',
+    message : 'Apakah kamu yakin ingin <b>menghapus</b> akun reseller <b>' + esc(username) + '</b>?<br><br>Akun akan dinonaktifkan secara permanen.',
+    okLabel : 'Hapus',
+  });
+  if (!ok) return;
+  var j = await aFetch('DELETE', '/api/admin/resellers/' + encodeURIComponent(username));
+  if (j.ok) { toast('Reseller dihapus.', 'ok'); loadResellers(); }
+  else toast(j.message || 'Gagal.', 'err');
+}
+
+function editReseller(username) {
+  var r = _resellerData.find(function(x){ return x.username === username; });
+  if (!r) return;
+  openDrawer('<b>Edit Reseller</b><br><span style="font-size:.62rem;color:var(--t3)">' + esc(username) + '</span>',
+    '<div class="f-wrap" style="margin-bottom:.6rem">'
+      + '<div class="f-label" style="font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);margin-bottom:.28rem">Maks Server</div>'
+      + '<input class="f-inp" id="drEditMax" type="number" value="' + (r.maxServers||10) + '" min="1" max="9999">'
+    + '</div>'
+    + '<div class="f-wrap" style="margin-bottom:.85rem">'
+      + '<div class="f-label" style="font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);margin-bottom:.28rem">Plan Diizinkan</div>'
+      + '<input class="f-inp" id="drEditPlans" type="text" value="' + esc((r.allowedPlans||[]).join(', ')) + '" placeholder="kosong = semua plan">'
+      + '<div style="font-size:.6rem;color:var(--t3);margin-top:.22rem">Pisahkan koma. Kosong = semua plan aktif.</div>'
+    + '</div>'
+    + '<button class="dr-btn em" onclick="saveEditReseller(\'' + esc(username) + '\')">Simpan Perubahan</button>',
+    { wide: false }
+  );
+}
+
+async function saveEditReseller(username) {
+  var maxSrv   = parseInt((document.getElementById('drEditMax')||{}).value) || 10;
+  var plansRaw = ((document.getElementById('drEditPlans')||{}).value || '').trim();
+  var plans    = plansRaw ? plansRaw.split(',').map(function(p){ return p.trim().toLowerCase(); }).filter(Boolean) : [];
+  var j = await aFetch('PATCH', '/api/admin/resellers/' + encodeURIComponent(username), { maxServers: maxSrv, allowedPlans: plans });
+  if (j.ok) { toast('Reseller diperbarui.', 'ok'); closeDrawer(); loadResellers(); }
+  else toast(j.message || 'Gagal.', 'err');
+}
+
+function resetResellerPass(username) {
+  openDrawer('<b>Reset Password Reseller</b><br><span style="font-size:.62rem;color:var(--t3)">' + esc(username) + '</span>',
+    '<div class="f-wrap" style="margin-bottom:.85rem">'
+      + '<div class="f-label" style="font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);margin-bottom:.28rem">Password Baru</div>'
+      + '<input class="f-inp" id="drRsNewPass" type="text" placeholder="minimal 6 karakter">'
+    + '</div>'
+    + '<button class="dr-btn em" onclick="doResetResellerPass(\'' + esc(username) + '\')">Reset Password</button>',
+    { wide: false }
+  );
+}
+
+async function doResetResellerPass(username) {
+  var pwd = ((document.getElementById('drRsNewPass')||{}).value || '').trim();
+  if (!pwd || pwd.length < 6) { toast('Password minimal 6 karakter.', 'warn'); return; }
+  var j = await aFetch('POST', '/api/admin/resellers/' + encodeURIComponent(username) + '/reset-password', { password: pwd });
+  if (j.ok) { toast('Password reseller direset.', 'ok'); closeDrawer(); }
+  else toast(j.message || 'Gagal.', 'err');
+}
+
+// ══════════════════════════════════════════════════════
+// RESELLER SERVER MANAGEMENT
+// ══════════════════════════════════════════════════════
+var _rsServersData = [];
+
+async function loadRsServers() {
+  document.getElementById('rsServersBody').innerHTML = '<tr><td colspan="7" class="tbl-empty"><span class="ld"><span></span><span></span><span></span></span> Memuat...</td></tr>';
+  var j = await aFetch('GET', '/api/admin/reseller-servers');
+  if (!j.ok) { document.getElementById('rsServersBody').innerHTML = '<tr><td colspan="7" class="tbl-empty" style="color:var(--red)">' + esc(j.message||'Gagal memuat') + '</td></tr>'; return; }
+  _rsServersData = j.data || [];
+  renderRsServersTable();
+}
+
+function renderRsServersTable() {
+  var q = (document.getElementById('rsSrvSearch').value || '').toLowerCase().trim();
+  var rows = _rsServersData.filter(function(s) {
+    if (!q) return true;
+    return (s.resellerUsername||'').includes(q) || (s.panelUsername||'').includes(q) || (s.plan||'').includes(q);
+  });
+  if (!rows.length) {
+    document.getElementById('rsServersBody').innerHTML = '<tr><td colspan="7" class="tbl-empty">Tidak ada data.</td></tr>';
+    return;
+  }
+  var now = Date.now();
+  document.getElementById('rsServersBody').innerHTML = rows.map(function(s) {
+    var dL = s.daysLeft;
+    var expCls = !s.expiresAt ? '' : (dL <= 0 ? 'exp-dead' : dL <= 3 ? 'exp-warn' : 'exp-ok');
+    var expTxt = !s.expiresAt ? '<span style="color:var(--t4)">—</span>'
+      : (dL <= 0 ? '<span class="exp-dead">Expired ' + Math.abs(dL) + ' hari lalu</span>'
+      : '<span class="' + expCls + '">' + dL + ' hari<br><small style="font-weight:400;opacity:.7">' + new Date(s.expiresAt).toLocaleDateString('id-ID') + '</small></span>');
+    var statusBadge = s.status === 'active' ? '<span class="status-badge s-active">Aktif</span>'
+      : s.status === 'suspended' ? '<span class="status-badge s-suspended">Suspended</span>'
+      : '<span class="status-badge s-failed">' + esc(s.status||'?') + '</span>';
+    return '<tr>'
+      + '<td><b>' + esc(s.resellerUsername||'—') + '</b><br><small style="color:var(--t3);font-size:.58rem">' + esc(s.id||'') + '</small></td>'
+      + '<td>' + esc(s.panelUsername||'—') + '</td>'
+      + '<td>' + esc(s.plan||'—') + '</td>'
+      + '<td style="font-size:.62rem">' + esc(s.ram||'') + ' · ' + esc(s.disk||'') + ' · ' + esc(s.cpu||'') + '</td>'
+      + '<td>' + expTxt + '</td>'
+      + '<td>' + statusBadge + (s.expired ? ' <span class="status-badge s-expired">Expired</span>' : '') + '</td>'
+      + '<td><div class="act-btns">'
+        + '<button class="act-btn em" onclick="extendRsServer(\'' + esc(s.id) + '\')">+Hari</button>'
+        + (s.status === 'suspended'
+          ? '<button class="act-btn sky" onclick="toggleRsServer(\'' + esc(s.id) + '\',\'unsuspend\')">Aktifkan</button>'
+          : '<button class="act-btn yel" onclick="toggleRsServer(\'' + esc(s.id) + '\',\'suspend\')">Suspend</button>')
+        + '<button class="act-btn red" onclick="deleteRsServer(\'' + esc(s.id) + '\',\'' + esc(s.panelUsername||'?') + '\')">Hapus</button>'
+      + '</div></td>'
+      + '</tr>';
+  }).join('');
+}
+
+function extendRsServer(id) {
+  var s = _rsServersData.find(function(x){ return x.id === id; });
+  if (!s) return;
+  openDrawer('<b>Perpanjang Panel Reseller</b><br><span style="font-size:.62rem;color:var(--t3)">' + esc(s.panelUsername||id) + ' — ' + esc(s.resellerUsername||'') + '</span>',
+    '<div class="dr-row"><span class="dr-k">Reseller</span><span class="dr-v">' + esc(s.resellerUsername||'—') + '</span></div>'
+    + '<div class="dr-row"><span class="dr-k">Username Panel</span><span class="dr-v">' + esc(s.panelUsername||'—') + '</span></div>'
+    + '<div class="dr-row"><span class="dr-k">Plan</span><span class="dr-v">' + esc(s.plan||'—') + '</span></div>'
+    + '<div class="dr-row"><span class="dr-k">Masa Aktif Saat Ini</span><span class="dr-v">' + (s.expiresAt ? new Date(s.expiresAt).toLocaleDateString('id-ID') : '—') + '</span></div>'
+    + '<div class="dr-sep">Tambah Durasi</div>'
+    + '<div class="dr-inp-wrap"><label class="dr-label">Jumlah Hari</label><input class="dr-inp" id="drRsExtDays" type="number" value="30" min="1" max="3650" placeholder="jumlah hari"></div>'
+    + '<button class="dr-btn em" onclick="doExtendRsServer(\'' + esc(id) + '\')">Perpanjang</button>',
+    { wide: false }
+  );
+}
+
+async function doExtendRsServer(id) {
+  var days = parseInt((document.getElementById('drRsExtDays')||{}).value);
+  if (!days || days < 1 || days > 3650) { toast('Jumlah hari tidak valid.', 'warn'); return; }
+  var j = await aFetch('POST', '/api/admin/reseller-servers/' + encodeURIComponent(id) + '/extend', { days });
+  if (j.ok) { toast('Berhasil diperpanjang s/d ' + (j.newExpiryFmt||''), 'ok'); closeDrawer(); loadRsServers(); }
+  else toast(j.message || 'Gagal.', 'err');
+}
+
+async function toggleRsServer(id, action) {
+  var s = _rsServersData.find(function(x){ return x.id === id; });
+  var label = action === 'suspend' ? 'Suspend' : 'Aktifkan';
+  var ok = await showConfirm({ danger: action === 'suspend', title: label + ' Panel Reseller', message: label + ' panel <b>' + esc(s&&s.panelUsername||id) + '</b> milik reseller <b>' + esc(s&&s.resellerUsername||'?') + '</b>?', okLabel: label });
+  if (!ok) return;
+  var j = await aFetch('POST', '/api/admin/reseller-servers/' + encodeURIComponent(id) + '/' + action);
+  if (j.ok) { toast('Berhasil ' + label.toLowerCase() + '.', 'ok'); loadRsServers(); }
+  else toast(j.message || 'Gagal.', 'err');
+}
+
+async function deleteRsServer(id, username) {
+  var ok = await showConfirm({ danger: true, title: 'Hapus Panel Reseller', message: 'Hapus server panel <b>' + esc(username) + '</b> dari Pterodactyl? Tindakan ini <b>tidak bisa dibatalkan</b>.', okLabel: 'Hapus' });
+  if (!ok) return;
+  var j = await aFetch('DELETE', '/api/admin/reseller-servers/' + encodeURIComponent(id));
+  if (j.ok) { toast('Server reseller dihapus.', 'ok'); loadRsServers(); }
+  else toast(j.message || 'Gagal.', 'err');
+}
 
 </script>
 </body>

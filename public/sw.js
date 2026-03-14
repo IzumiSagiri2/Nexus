@@ -19,7 +19,9 @@ self.addEventListener('activate', function(e) {
       return Promise.all(keys.filter(function(k){ return k !== CACHE_NAME; }).map(function(k){ return caches.delete(k); }));
     })
   );
-  self.clients.claim();
+  // BUG FIX: Removed self.clients.claim() — it was causing unexpected page reloads
+  // when the SW updated during an active session (e.g. after deployment).
+  // Pages will use the new SW on next navigation instead, which is the correct behavior.
 });
 
 self.addEventListener('fetch', function(e) {

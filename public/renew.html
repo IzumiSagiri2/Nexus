@@ -14,11 +14,11 @@
 :root{
   --bg:#080808;--bg1:#0e0e0e;--bg2:#141414;--bg3:#1a1a1a;
   --line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--line3:rgba(255,255,255,.2);
-  --em:#34d399;--em2:#6ee7b7;--red:#f87171;--yellow:#fbbf24;
+  --em:#34d399;--em-rgb:52,211,153;--em2:#6ee7b7;--red:#f87171;--yellow:#fbbf24;
   --t1:#f5f5f5;--t2:rgba(245,245,245,.55);--t3:rgba(245,245,245,.28);--t4:rgba(245,245,245,.12);
   --font:'Instrument Sans',sans-serif;--rad:14px;--rs:9px;
 }
-html,body{height:100%  overscroll-behavior: none;
+html,body{height:100%; overscroll-behavior: none;
 }
 body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:1.5rem 1rem 3rem;font-size:13.5px}
 body::before{content:'';position:fixed;top:-150px;left:50%;transform:translateX(-50%);width:600px;height:300px;pointer-events:none;z-index:0;background:radial-gradient(ellipse,rgba(var(--em-rgb),.05) 0%,transparent 70%)}
@@ -237,8 +237,18 @@ async function renderStep2() {
   var expStatus = left <= 3 ? 'warn' : 'ok';
   var expText   = left <= 0 ? '⚠ Sudah expired' : left + ' hari lagi';
 
+  // BUG FIX: show warning if panel is expired or server was deleted on Pterodactyl
+  var statusWarning = '';
+  if (d.panelStatus === 'EXPIRED' || left <= 0) {
+    statusWarning = '<div style="background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.25);border-radius:8px;padding:.55rem .8rem;font-size:.68rem;color:#fbbf24;margin-bottom:.75rem">⚠ Panel sudah expire. Perpanjang untuk mengaktifkan kembali.</div>';
+  }
+  if (d.pteroStatus === 'deleted') {
+    statusWarning = '<div style="background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.25);border-radius:8px;padding:.55rem .8rem;font-size:.68rem;color:#f87171;margin-bottom:.75rem">⚠ Server dihapus dari panel. Perpanjang akan memperbarui expiry di sistem. Hubungi admin untuk reinstall server.</div>';
+  }
+
   document.getElementById('infoCard').innerHTML =
-    '<div class="info-head"><div class="info-dot"></div><div class="info-username">@' + d.username + '</div></div>'
+    statusWarning
+    + '<div class="info-head"><div class="info-dot"></div><div class="info-username">@' + d.username + '</div></div>'
     + '<div class="info-row"><span class="info-k">Paket</span><span class="info-v">' + (d.ram || d.plan) + '</span></div>'
     + '<div class="info-row"><span class="info-k">Expired</span><span class="info-v">' + fmtDate(d.expiresAt) + '</span></div>'
     + '<div class="info-row"><span class="info-k">Sisa Hari</span><span class="info-v ' + expStatus + '">' + expText + '</span></div>';
@@ -392,6 +402,8 @@ fetch('/api/products').then(function(r){return r.json();}).then(function(j){
     _src.onmessage = function(e) {
       try {
         var d = JSON.parse(e.data);
+        // BUG FIX: handle 'reconnect' event for fast reconnect (1.5s instead of 30s wait)
+        if (d.type === 'reconnect') { _src.close(); setTimeout(connectStoreSSE, 1500); return; }
         if (d.type === 'settings_update' && d.settings) {
           applyGlobalSettings(d.settings);
         }
@@ -406,7 +418,8 @@ fetch('/api/products').then(function(r){return r.json();}).then(function(j){
         }
       } catch(ex){}
     };
-    _src.onerror = function(){ _src.close(); setTimeout(connectStoreSSE, 30000); };
+    // BUG FIX: faster reconnect on error (5s instead of 30s)
+    _src.onerror = function(){ _src.close(); setTimeout(connectStoreSSE, 5000); };
   } catch(ex){}
 })();
 

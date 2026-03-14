@@ -271,8 +271,19 @@ body::before{content:'';position:fixed;top:-120px;left:50%;transform:translateX(
         <div class="cnt-wrap">
           <input class="cnt-search" id="cntSearch" placeholder="Cari negara..." oninput="filterCountries()">
           <div class="cnt-tbl-scroll"><table class="cnt-tbl">
-            <thead><tr><th>Negara</th><th>Stok</th><th class="cnt-th-rate">Rate</th><th>Harga</th><th></th></tr></thead>
+            <thead><tr><th>Negara</th><th>Stok</th><th class="cnt-th-rate">Rate</th><th>Harga Min</th><th></th></tr></thead>
             <tbody id="cntBody"><tr><td colspan="5" class="cnt-empty"><span class="spin">|</span></td></tr></tbody>
+          </table></div>
+        </div>
+        <!-- Price list for selected country — muncul saat klik negara -->
+        <div id="priceSection" style="display:none;margin-top:.75rem">
+          <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.65rem">
+            <button style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:.7rem;font-weight:600" onclick="clearCountry()">← Ganti Negara</button>
+            <span style="font-size:.75rem;font-weight:700;color:var(--t1)" id="selCntName"></span>
+          </div>
+          <div class="cnt-tbl-scroll"><table class="cnt-tbl">
+            <thead><tr><th>Provider</th><th>Stok</th><th class="cnt-th-rate">Rate</th><th>Harga</th><th></th></tr></thead>
+            <tbody id="priceBody"><tr><td colspan="5" class="cnt-empty">—</td></tr></tbody>
           </table></div>
         </div>
       </div>
@@ -433,7 +444,8 @@ async function doLogin() {
   hideErr('loginErr');
   var user = document.getElementById('loginUser').value.trim();
   var pass = document.getElementById('loginPass').value;
-  if (!user || !pass) return;
+  if (!user) { showErr('loginErr', 'Username tidak boleh kosong.'); document.getElementById('loginUser').focus(); return; }
+  if (!pass) { showErr('loginErr', 'Password tidak boleh kosong.'); document.getElementById('loginPass').focus(); return; }
   var btn = document.getElementById('loginBtn'); btn.disabled=true; btn.textContent='...';
   try {
     var r = await fetch('/api/user/login', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: 'username='+encodeURIComponent(user)+'&password='+encodeURIComponent(pass) });
@@ -449,7 +461,8 @@ async function doRegister() {
   var user  = document.getElementById('regUser').value.trim();
   var pass  = document.getElementById('regPass').value;
   var email = document.getElementById('regEmail').value.trim();
-  if (!user || !pass) return;
+  if (!user) { showErr('regErr', 'Username tidak boleh kosong.'); document.getElementById('regUser').focus(); return; }
+  if (!pass) { showErr('regErr', 'Password tidak boleh kosong.'); document.getElementById('regPass').focus(); return; }
   var btn = document.getElementById('regBtn'); btn.disabled=true; btn.textContent='...';
   try {
     var r = await fetch('/api/user/register', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: 'username='+encodeURIComponent(user)+'&password='+encodeURIComponent(pass)+(email?'&email='+encodeURIComponent(email):'') });
@@ -775,13 +788,15 @@ async function selectService(s) {
 }
 
 function clearService() {
-  selService = null; allCountries = [];
+  selService = null; allCountries = []; _selCountry = null;
   document.getElementById('countrySection').style.display = 'none';
+  document.getElementById('priceSection').style.display = 'none';
   renderServices(allServices);
 }
 
 var _sortMode = 'price';
 var _pendingBuy = null; // { country, pricelist }
+var _selCountry = null; // selected country for price panel
 
 function setSortMode(mode) {
   _sortMode = mode;
@@ -794,32 +809,81 @@ function setSortMode(mode) {
 
 function renderCountries(list) {
   var tbody = document.getElementById('cntBody');
-  // Flatten: one row per (country, pricelist) for countries with stock
-  var rows = [];
-  list.forEach(function(c) {
-    (c.pricelist || []).filter(function(p){ return p.available && p.stock > 0; }).forEach(function(p) {
-      rows.push({ country: c, pl: p });
-    });
+  // One row per country — only show countries with at least one available provider
+  var countries = list.filter(function(c) {
+    return (c.pricelist || []).some(function(p){ return p.available && p.stock > 0; });
   });
 
-  if (!rows.length) {
+  if (!countries.length) {
     tbody.innerHTML = '<tr><td colspan="5" class="cnt-empty">Stok kosong untuk layanan ini saat ini.</td></tr>';
     return;
   }
 
-  // Sort
+  // Compute summary per country for sorting
+  var rows = countries.map(function(c) {
+    var pls = (c.pricelist || []).filter(function(p){ return p.available && p.stock > 0; });
+    var minPrice = Math.min.apply(null, pls.map(function(p){ return p.price||Infinity; }));
+    var maxRate  = Math.max.apply(null, pls.map(function(p){ return p.rate||0; }));
+    var totalStock = pls.reduce(function(s,p){ return s + (p.stock||0); }, 0);
+    return { country: c, minPrice, maxRate, totalStock };
+  });
+
   if (_sortMode === 'rate') {
-    rows.sort(function(a,b){ return (b.pl.rate||0) - (a.pl.rate||0); });
+    rows.sort(function(a,b){ return b.maxRate - a.maxRate; });
   } else if (_sortMode === 'stock') {
-    rows.sort(function(a,b){ return (b.pl.stock||0) - (a.pl.stock||0); });
+    rows.sort(function(a,b){ return b.totalStock - a.totalStock; });
   } else {
-    rows.sort(function(a,b){ return (a.pl.price||0) - (b.pl.price||0); });
+    rows.sort(function(a,b){ return a.minPrice - b.minPrice; });
   }
 
   tbody.innerHTML = '';
   rows.forEach(function(row) {
-    var c = row.country, p = row.pl;
+    var c = row.country;
     var imgSrc = c.img || c.flag || '';
+    var rate = row.maxRate;
+    var rClass = rate >= 70 ? '' : (rate >= 40 ? ' med' : ' low');
+    var rColor = rate >= 70 ? 'var(--em)' : (rate >= 40 ? 'var(--yel)' : 'var(--red)');
+    var rateHtml = rate > 0
+      ? '<div class="cnt-rate" style="color:' + rColor + '">' + Math.round(rate) + '%</div>'
+        + '<div class="rate-bar"><div class="rate-bar-fill' + rClass + '" style="width:' + Math.min(100,Math.round(rate)) + '%"></div></div>'
+      : '<div class="cnt-rate" style="color:var(--t3)">—</div>';
+    var tr = document.createElement('tr');
+    tr.style.cursor = 'pointer';
+    tr.innerHTML = '<td>' + (imgSrc ? '<img class="cnt-flag" src="' + esc(imgSrc) + '" onerror="this.style.display=\'none\'" alt="">' : '') + '<b>' + esc(c.name) + '</b></td>'
+      + '<td class="cnt-stk">x' + row.totalStock + '</td>'
+      + '<td>' + rateHtml + '</td>'
+      + '<td class="cnt-price">' + idr(row.minPrice === Infinity ? 0 : row.minPrice) + '</td>'
+      + '<td><button class="cnt-buy">Pilih</button></td>';
+    tr.querySelector('.cnt-buy').onclick = (function(country){ return function(e){ e.stopPropagation(); selectCountry(country); }; })(c);
+    tr.onclick = (function(country){ return function(){ selectCountry(country); }; })(c);
+    tbody.appendChild(tr);
+  });
+}
+
+function selectCountry(country) {
+  _selCountry = country;
+  document.getElementById('selCntName').textContent = country.name;
+  var priceSection = document.getElementById('priceSection');
+  priceSection.style.display = 'block';
+  setTimeout(function(){ priceSection.scrollIntoView({ behavior:'smooth', block:'nearest' }); }, 80);
+  renderPriceList(country);
+}
+
+function clearCountry() {
+  _selCountry = null;
+  document.getElementById('priceSection').style.display = 'none';
+}
+
+function renderPriceList(country) {
+  var tbody = document.getElementById('priceBody');
+  var pls = (country.pricelist || []).filter(function(p){ return p.available && p.stock > 0; });
+  if (!pls.length) {
+    tbody.innerHTML = '<tr><td colspan="5" class="cnt-empty">Stok kosong.</td></tr>';
+    return;
+  }
+  pls.sort(function(a,b){ return (a.price||0) - (b.price||0); });
+  tbody.innerHTML = '';
+  pls.forEach(function(p) {
     var rate = typeof p.rate === 'number' ? p.rate : null;
     var rateHtml = '';
     if (rate !== null) {
@@ -831,12 +895,12 @@ function renderCountries(list) {
       rateHtml = '<div class="cnt-rate" style="color:var(--t3)">—</div>';
     }
     var tr = document.createElement('tr');
-    tr.innerHTML = '<td>' + (imgSrc ? '<img class="cnt-flag" src="' + esc(imgSrc) + '" onerror="this.style.display=\'none\'" alt="">' : '') + '<b>' + esc(c.name) + '</b></td>'
+    tr.innerHTML = '<td><b>' + esc(p.provider_name || p.provider_id || '—') + '</b></td>'
       + '<td class="cnt-stk">x' + (p.stock||0) + '</td>'
       + '<td>' + rateHtml + '</td>'
       + '<td class="cnt-price">' + esc(p.price_format || idr(p.price)) + '</td>'
       + '<td><button class="cnt-buy">Beli</button></td>';
-    tr.querySelector('.cnt-buy').onclick = (function(country, pl){ return function(e){ openBuyModal(country, pl, e.currentTarget); }; })(c, p);
+    tr.querySelector('.cnt-buy').onclick = (function(pl){ return function(e){ openBuyModal(country, pl, e.currentTarget); }; })(p);
     tbody.appendChild(tr);
   });
 }
@@ -844,6 +908,8 @@ function renderCountries(list) {
 function filterCountries() {
   var q = (document.getElementById('cntSearch').value || '').toLowerCase().trim();
   renderCountries(q ? allCountries.filter(function(c){ return c.name.toLowerCase().includes(q); }) : allCountries);
+  // Hide price section when searching
+  if (q) clearCountry();
 }
 
 function openBuyModal(country, pricelist, srcBtn) {
@@ -878,7 +944,7 @@ async function confirmBuy() {
   var country = _pendingBuy.country, pricelist = _pendingBuy.pricelist, srcBtn = _pendingBuy.srcBtn;
   // Lock modal button during purchase
   var modalBtn = document.getElementById('buyModalConfirm');
-  if (modalBtn) { modalBtn.disabled = true; modalBtn.innerHTML = '<span class="spin" style="display:inline-block">⏳</span> Membeli...'; }
+  if (modalBtn) { modalBtn.disabled = true; modalBtn.innerHTML = '<span class="spin" style="display:inline-block">...</span> Membeli...'; }
   await buyNumber(country, pricelist, srcBtn, modalBtn);
   // Always reset modal button after
   if (modalBtn) { modalBtn.disabled = false; modalBtn.textContent = 'Beli Sekarang'; modalBtn.style.opacity = ''; }
@@ -1062,7 +1128,7 @@ function updateDepPreview() {
   var minDep  = cfg.depositMin || 1000;
   if (amt < minDep && minDep > 1000) {
     prevEl.style.display = 'block';
-    prevEl.innerHTML = '<span style="color:var(--yel)">⚠ Minimal deposit <b>' + idr(minDep) + '</b></span>';
+    prevEl.innerHTML = '<span style="color:var(--yel)">Minimal deposit <b>' + idr(minDep) + '</b></span>';
     return;
   }
   if (!amt || !feeVal) { prevEl.style.display = 'none'; return; }
@@ -1276,6 +1342,8 @@ fetch('/api/products').then(function(r){return r.json();}).then(function(j){
     _src.onmessage = function(e) {
       try {
         var d = JSON.parse(e.data);
+        // BUG FIX: handle 'reconnect' event for fast reconnect
+        if (d.type === 'reconnect') { _src.close(); setTimeout(connectStoreSSE, 1500); return; }
         // Real-time theme & background update
         if (d.type === 'settings_update' && d.settings) {
           applyGlobalSettings(d.settings);
@@ -1300,7 +1368,8 @@ fetch('/api/products').then(function(r){return r.json();}).then(function(j){
         }
       } catch(ex){}
     };
-    _src.onerror = function(){ _src.close(); setTimeout(connectStoreSSE, 30000); };
+    // BUG FIX: faster reconnect (5s instead of 30s)
+    _src.onerror = function(){ _src.close(); setTimeout(connectStoreSSE, 5000); };
   } catch(ex){}
 })();
 
