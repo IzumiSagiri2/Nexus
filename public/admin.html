@@ -5033,14 +5033,15 @@ async function loadAdConfig() {
   try {
     var j = await aFetch('GET', '/api/admin/ad');
     if (!j || !j.ok) return;
+    var d = j.data || {};
     var el = function(id) { return document.getElementById(id); };
     var cb = el('adEnabled');
-    if (cb) { cb.checked = !!j.enabled; }
+    if (cb) { cb.checked = !!d.enabled; }
     var lbl = el('adStatusLbl');
-    if (lbl) { lbl.textContent = j.enabled ? 'AKTIF' : 'Nonaktif'; lbl.style.color = j.enabled ? 'var(--em)' : 'var(--t3)'; }
-    if (el('adImageUrl')) el('adImageUrl').value = j.imageUrl || '';
-    if (el('adText'))     el('adText').value     = j.text     || '';
-    if (el('adLinkUrl'))  el('adLinkUrl').value  = j.linkUrl  || '';
+    if (lbl) { lbl.textContent = d.enabled ? 'AKTIF' : 'Nonaktif'; lbl.style.color = d.enabled ? 'var(--em)' : 'var(--t3)'; }
+    if (el('adImageUrl')) el('adImageUrl').value = d.imageUrl || '';
+    if (el('adText'))     el('adText').value     = d.text     || '';
+    if (el('adLinkUrl'))  el('adLinkUrl').value  = d.linkUrl  || '';
     updateAdPreview();
   } catch(e) { console.warn('[loadAdConfig]', e); }
 }
@@ -5053,12 +5054,13 @@ async function saveAdConfig() {
     text     : ((el('adText')      || {}).value  || '').trim(),
     linkUrl  : ((el('adLinkUrl')   || {}).value  || '').trim(),
   };
-  if (!payload.imageUrl && !payload.text) {
-    showToast('Masukkan URL gambar atau teks iklan terlebih dahulu.', 'err'); return;
+  // Only block save if iklan aktif tapi tidak ada konten sama sekali
+  if (payload.enabled && !payload.imageUrl && !payload.text) {
+    toast('Masukkan URL gambar atau teks iklan terlebih dahulu.', 'err'); return;
   }
   var j = await aFetch('POST', '/api/admin/ad', payload);
-  if (j && j.ok) showToast('✅ Konfigurasi iklan tersimpan.', 'ok');
-  else showToast('Gagal menyimpan iklan.', 'err');
+  if (j && j.ok) toast('Konfigurasi iklan tersimpan.', 'ok');
+  else toast((j && j.message) || 'Gagal menyimpan iklan.', 'err');
 }
 
 async function saveWebhook() {
